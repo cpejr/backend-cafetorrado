@@ -1,4 +1,4 @@
-// Client 2: utilizara a porta 555, recebera os parametros da maquina
+// Client que utilizara a porta 555 e recebera os parametros da maquina
 
 const net = require('net');
 

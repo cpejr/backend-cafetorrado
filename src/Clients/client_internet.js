@@ -1,4 +1,4 @@
-// Client 1: utilizara a porta 888, que ira configurar a maquina 
+// Client que utilizara a porta 888 e ira configurar a maquina
 
 const net = require('net');
 
