@@ -26,7 +26,7 @@
             let counter = 0;
             setInterval(() => {
             ++counter;
-            socket.emit('hey', { counter }); // the object will be serialized for you
+            socket.emit('hey', { counter }); 
             }, 200)
             socket.on('hello', (counter) => {
              $events.appendChild(newItem(`${counter} milliseconds`));

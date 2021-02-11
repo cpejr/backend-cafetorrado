@@ -1,30 +1,40 @@
-const content = require('fs').readFileSync(`${__dirname}/index.html`, 'utf8');
+const express = require('express');
+const EventEmitter = require('events');
 
-const httpServer = require('http').createServer((req, res) => {
-  // serve the index.html file
-  res.setHeader('Content-Type', 'text/html');
-  res.setHeader('Content-Length', Buffer.byteLength(content));
-  res.end(content);
+const app = express();
+const server = require('http').createServer(app);
+let io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  },
 });
 
-// const buffer = new ArrayBuffer(16);
-// const int32View = new Int32Array(buffer);
-
-const io = require('socket.io')(httpServer);
+const emitter = new EventEmitter();
+emitter.setMaxListeners(50);
+/*eslint-disable */
+let bufferData = {
+  waterTemp: 50,
+  fireTemp: 40,
+  ROR: 100,
+};
+/* eslint-enable */
+function addData(buffer) {
+  console.log(buffer);
+  buffer.waterTemp += 1;
+  buffer.fireTemp += 1;
+  buffer.ROR += 1;
+}
+app.get('/', (req, res) => {
+  res.send('Connected');
+});
 
 io.on('connection', (socket) => {
-  console.log('connect');
-  socket.on('hey', (data) => {
-    console.log('hey', data);
-  });
-  let counter = 1;
+  console.log(socket.id);
   setInterval(() => {
-    // if (counter <= int32View.Length) { counter = 0; }
-    // int32View[counter] = counter;
-    // console.log(int32View);
-    socket.emit('hello', ++counter);
-  }, 200);
+    socket.emit('newData', bufferData);
+    addData(bufferData);
+  }, 1000);
 });
-httpServer.listen(3000, () => {
-  console.log('go to http://localhost:3000');
-});
+
+io = io.listen(server);
+server.listen(8888);

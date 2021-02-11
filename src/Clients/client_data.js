@@ -1,5 +1,4 @@
 // Client que utilizara a porta 555 e recebera os parametros da maquina
-
 const net = require('net');
 
 const client2 = new net.Socket();
