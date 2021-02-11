@@ -11,19 +11,22 @@ let io = require('socket.io')(server, {
 
 const emitter = new EventEmitter();
 emitter.setMaxListeners(50);
+
 /*eslint-disable */
-let bufferData = {
-  waterTemp: 50,
-  fireTemp: 40,
-  ROR: 100,
+var bufferData = {
+  waterTemp: 0,
+  fireTemp: 0,
+  ROR: 0,
 };
 /* eslint-enable */
+
 function addData(buffer) {
   console.log(buffer);
   buffer.waterTemp += 1;
   buffer.fireTemp += 1;
   buffer.ROR += 1;
 }
+
 app.get('/', (req, res) => {
   res.send('Connected');
 });
@@ -33,7 +36,7 @@ io.on('connection', (socket) => {
   setInterval(() => {
     socket.emit('newData', bufferData);
     addData(bufferData);
-  }, 1000);
+  }, 200);
 });
 
 io = io.listen(server);
