@@ -14,30 +14,51 @@ emitter.setMaxListeners(50);
 
 /*eslint-disable */
 var bufferData = {
-  waterTemp: 0,
+  waterTemp:0,
   fireTemp: 0,
   ROR: 0,
+  pressure: 0,
+  speed: 0,
+  grainyness: 0,
+  time: 0,
 };
-/* eslint-enable */
-
+let x = 2
 function addData(buffer) {
-  console.log(buffer);
-  buffer.waterTemp += 1;
-  buffer.fireTemp += 1;
-  buffer.ROR += 1;
+  buffer.waterTemp = Math.cos(x);
+  buffer.ROR = Math.sin(x);
+  buffer.fireTemp = -Math.sin(x);
+  buffer.pressure = -Math.cos(x);
+  buffer.grainyness = Math.cos(3*x);
+  buffer.speed = -Math.sin(3*x);
+  buffer.time += 1;
+  x += 0.1 ;
 }
 
 app.get('/', (req, res) => {
-  res.send('Connected');
+  res.send('Connected'); 
 });
 
-io.on('connection', (socket) => {
-  console.log(socket.id);
-  setInterval(() => {
-    socket.emit('newData', bufferData);
+
+
+io.on('connection', (socket) => { 
+  let loopData; 
+  loopData = setInterval(() => {
+    io.to(socket.id).emit('newData', bufferData);
     addData(bufferData);
-  }, 200);
+  }, 500);
+
+  socket.on('manualData', (data) => {
+    console.log(data);
+  })
+
+  socket.on('disconnect', () => {
+    console.log('cleaning ' + socket.id);
+    clearInterval(loopData);
+  })
 });
+
+
+
 
 io = io.listen(server);
 server.listen(8888);
