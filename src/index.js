@@ -10,7 +10,7 @@ let io = require('socket.io')(server, {
 });
 
 const emitter = new EventEmitter();
-emitter.setMaxListeners(50);
+emitter.setMaxListeners(1);
 
 /*eslint-disable */
 var bufferData = {
@@ -25,7 +25,6 @@ var bufferData = {
 let x = 2
 function addData(buffer) {
   buffer.waterTemp = Math.cos(x);
- // buffer.ROR = 0;
   buffer.fireTemp = -Math.sin(x);
   buffer.pressure = -Math.cos(x);
   buffer.grainyness = Math.random();
@@ -46,9 +45,10 @@ io.on('connection', (socket) => {
   loopData = setInterval(() => {
     io.to(socket.id).emit('newData', bufferData);
     addData(bufferData);
-
   }, 200);
-
+  socket.on('cleanList', () => {
+    socket.off('newData', () => {})
+  })
   socket.on('manualData', (data) => {
     console.log(data);
   })
@@ -62,10 +62,6 @@ io.on('connection', (socket) => {
     console.log('cleaning ' + socket.id);
     clearInterval(loopData);
   })
-
-
-
-
 });
 
 
