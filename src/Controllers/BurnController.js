@@ -1,9 +1,4 @@
-const express = require('express');
-
-const router = express.Router();
-
 exports.getBurn = (req, res, next) => {
-  console.log('chega aqui?');
   res.status(200).send({
     message: 'using get route',
   });
