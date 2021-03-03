@@ -21,11 +21,14 @@ var bufferData = {
   speed: 0,
   grainyness: 0,
   time: 0,
+
 };
 let x = 2
+
 function addData(buffer) {
   buffer.waterTemp = Math.cos(x);
  // buffer.ROR = 0;
+ 
   buffer.fireTemp = -Math.sin(x);
   buffer.pressure = -Math.cos(x);
   buffer.grainyness = Math.random();
@@ -43,11 +46,19 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => { 
   let loopData; 
-  loopData = setInterval(() => {
-    io.to(socket.id).emit('newData', bufferData);
-    addData(bufferData);
+  socket.on('start',() =>{
+    if(!loopData){
+    loopData = setInterval(() => {
+      io.to(socket.id).emit('newData', bufferData);
+      addData(bufferData);
+    }, 200);
+  }
+  })
 
-  }, 200);
+  socket.on('stop' , () =>{
+    if(loopData)clearInterval(loopData);
+    bufferData.time = 0;
+  })
 
   socket.on('manualData', (data) => {
     console.log(data);
@@ -61,6 +72,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('cleaning ' + socket.id);
     clearInterval(loopData);
+    bufferData.time = 0;
   })
 
 
