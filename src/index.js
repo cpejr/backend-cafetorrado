@@ -1,11 +1,9 @@
 const express = require('express');
-const cors = require('cors');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const EventEmitter = require('events');
 
-const port = process.env.PORT || 3333;
 const app = express();
 const server = require('http').createServer(app);
 
@@ -16,14 +14,6 @@ let io = require('socket.io')(server, {
   cors: {
     origin: '*',
   },
-});
-const routes = require('./routes');
-
-app.use(cors());
-app.use(express.json());
-app.use(routes);
-app.listen(port, () => {
-  console.log(`Is listening on ${port}`);
 });
 
 // eslint-disable-next-line
@@ -47,10 +37,6 @@ function addData(buffer) {
   buffer.time += 1;
   x += 0.1;
 }
-
-app.get('/', (req, res) => {
-  res.send('Connected');
-});
 
 io.on('connection', (socket) => {
   let loopData;
@@ -102,10 +88,10 @@ setInterval(() => {
     usage: `${percents}%`,
   };
   console.clear();
-  console.log('/********Real-time usage of PC RAM*********/');
+  console.log('/********Real-time usage of Tablet RAM*********/');
   console.table(pcStats);
   const used = process.memoryUsage().heapUsed / 1024 / 1024;
   console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
 }, 1000);
+
 io = io.listen(server);
-server.listen(8888);
