@@ -1,3 +1,4 @@
+/*eslint-disable*/
 const express = require('express');
 const os = require('os');
 const fs = require('fs');
@@ -59,9 +60,9 @@ io.on('connection', (socket) => {
     bufferData.time = 0;
   })
 
-  socket.on('cleanList', () => {
-    socket.off('newData', () => {});
-  });
+  // socket.on('cleanList', () => {
+  //   socket.off('newData', () => {});
+  // });
 
   fs.readFile((path.join(__dirname), 'buttonData.txt'), 'utf8', (err, data) => {
     if (err) {
@@ -114,3 +115,4 @@ setInterval(() => {
 }, 1000);
 
 io = io.listen(server);
+server.listen(8888);
