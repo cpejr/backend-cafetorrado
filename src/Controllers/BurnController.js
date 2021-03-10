@@ -14,6 +14,7 @@ module.exports = {
       });
     }
   },
+
   async get(req, res) {
     try {
       const result = await roastModel.get();
@@ -25,18 +26,4 @@ module.exports = {
       });
     }
   },
-  // async update(req, res){
-  //   try {
-
-  //   } catch (error) {
-
-  //   }
-  // }
-  // async delete(req, res){
-  //   try {
-
-  //   } catch (error) {
-
-  //   }
-  // }
 };

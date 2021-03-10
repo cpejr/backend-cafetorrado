@@ -9,5 +9,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-  return knex.schema.dropTable('torra');
+  return knex.schema.dropTable('roast');
 };
