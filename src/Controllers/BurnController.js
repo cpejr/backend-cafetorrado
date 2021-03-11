@@ -1,15 +1,31 @@
-exports.getBurn = (req, res, next) => {
-  res.status(200).send({
-    message: 'using get route',
-  });
-};
+const fs = require('fs');
+const path = require('path');
+const roastModel = require('../Models/RoastModel');
 
-exports.postBurn = (req, res, next) => {
-  const burn = {
-    name: req.body.name,
-  };
-  res.status(201).send({
-    message: 'Torra criada',
-    burn_created: burn,
-  });
+module.exports = {
+  async create(req, res) {
+    try {
+      const newRoast = req.body;
+      const result = await roastModel.create(newRoast);
+      return res.status(200).json(result);
+    } catch (err) {
+      console.warn(`There has been an error on the creation of the roast:\n${err}`);
+      return res.status(500).json({
+        error: 'Failed to create Roast',
+      });
+    }
+  },
+
+  async get(req, res) {
+    try {
+      const result = await roastModel.get();
+      return res.status(200).json(result);
+    } catch (err) {
+      console.warn(`There has been an error on the creation of the roast:\n${err}`);
+      return res.status(500).json({
+        error: 'Failed to get Roasts',
+      });
+    }
+  },
+
 };

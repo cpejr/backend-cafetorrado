@@ -22,7 +22,7 @@ app.use((req, res, next) => {
     return res.status(200).send({});
   }
 
-  next();
+  return next();
 });
 
 app.use(routes);
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
   err.status = 404;
   next(err);
 });
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500);
   return res.send({
     error: err.message,
