@@ -1,4 +1,5 @@
-const connection = require('../database/connection');
+const fs = require('fs');
+const path = require('path');
 const roastModel = require('../Models/RoastModel');
 
 module.exports = {
@@ -26,4 +27,5 @@ module.exports = {
       });
     }
   },
+
 };
