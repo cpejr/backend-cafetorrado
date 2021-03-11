@@ -4,7 +4,6 @@ exports.up = function (knex) {
     table.string('name').primary().notNullable();
     table.string('timestamp').notNullable();
     table.string('description').notNullable();
-    table.string('arquive_id').notNullable();
   });
 };
 
