@@ -3,7 +3,7 @@ const net = require('net');
 
 const client2 = new net.Socket();
 
-client2.connect(555, '192.164.4.1', () => {
+client2.connect(888, '192.164.4.1', () => {
   console.log('Client 2: connection established with server');
   client2.write('Connected');
 });
