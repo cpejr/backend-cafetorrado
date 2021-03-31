@@ -48,37 +48,23 @@ function catchWifiInformations(buffer) {
 function catchData(buffer) {
   const serverData = new Struct()
     .word32Ule('BlkBegDaq')
-    .floatle('MdlAirScl') // Temperatura do Ar Scaled = 175
-    .floatle('MdlGraScl') // Temperatura do Grao Scaled = 145
-    .floatle('MdlDisErr') // Erro do Modelo = 5
-    .floatle('MdlInjOut') // Percentual de chama = 25
-    .floatle('MdlDruOut') // Percentual de tambor = 65
-    .floatle('MdlAirOut') // Percentual de ar = 75
+    // .floatle('MdlAirScl') // Temperatura do Ar Scaled = 175
+    // .floatbe('MdlGraScl') // Temperatura do Grao Scaled = 145
+    // .floatle('MdlDisErr') // Erro do Modelo = 5
+    // .floatle('MdlInjOut') // Percentual de chama = 25
+    // .floatle('MdlDruOut') // Percentual de tambor = 65
+    // .floatbe('MdlAirOut') // Percentual de ar = 75
     .word32Ule('BlkEndDaq');
     // eslint-disable-next-line
-  serverData._setBuff(buffer);
-
-  const {
-    BlkBegDaq, MdlAirScl, MdlGraScl, MdlDisErr, MdlInjOut, MdlDruOut, MdlAirOut, BlkEndDaq,
-  } = serverData.fields;
-  const dataSvr = {
-    BlkBegDaq: BlkBegDaq.toString(16),
-    MdlAirScl: parseInt(MdlAirScl),
-    MdlGraScl: parseFloat(MdlGraScl),
-    MdlDisErr: parseFloat(MdlDisErr),
-    MdlInjOut: parseFloat(MdlInjOut),
-    MdlDruOut: parseFloat(MdlDruOut),
-    MdlAirOut: parseFloat(MdlAirOut),
-    BlkEndDaq: BlkEndDaq.toString(16),
-  };
-  return dataSvr;
+   serverData._setBuff(buffer);
+  return serverData;
 }
 function connectWifi() {
   client1.connect(555, '192.168.5.1', () => {
     console.log('Client 1: connection established with server');
     client1.write('Connected');
-    client1.destroy();
-    client1.connect(888, '192.168.5.1', () => {});
+    // client1.destroy();
+    // client1.connect(888, '192.168.5.1', () => {});
   });
 }
 connectWifi();
@@ -92,7 +78,9 @@ setTimeout(() => {
 client1.on('data', (data) => {
   console.log(`Data from server: ${data.toJSON()}`);
   const formattedData = catchData(data);
-  console.log('formattedData', formattedData);
+  console.log('formattedData', formattedData.get('BlkBegDaq').toString(16));
+  // console.log('formattedData', formattedData.get('MdlGraScl'));
+  console.log('formattedData', formattedData.get('BlkEndDaq').toString(16));
 });
 client1.on('close', () => {
   console.log('Connection closed');
