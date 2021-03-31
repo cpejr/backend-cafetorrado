@@ -48,12 +48,14 @@ function catchWifiInformations(buffer) {
 function catchData(buffer) {
   const serverData = new Struct()
     .word32Ule('BlkBegDaq')
+    .word32Ule('MdlRunCnt')
+    .chars('BlkNotTrc', 108)
     .floatle('MdlAirScl') // Temperatura do Ar Scaled = 175
-    // .floatbe('MdlGraScl') // Temperatura do Grao Scaled = 145
-    // .floatle('MdlDisErr') // Erro do Modelo = 5
-    // .floatle('MdlInjOut') // Percentual de chama = 25
-    // .floatle('MdlDruOut') // Percentual de tambor = 65
-    // .floatbe('MdlAirOut') // Percentual de ar = 75
+    .floatle('MdlGraScl') // Temperatura do Grao Scaled = 145
+    .floatle('MdlDisErr') // Erro do Modelo = 5
+    .floatle('MdlInjOut') // Percentual de chama = 25
+    .floatle('MdlDruOut') // Percentual de tambor = 65
+    .floatle('MdlAirOut') // Percentual de ar = 75
     .word32Ule('BlkEndDaq');
     // eslint-disable-next-line
    serverData._setBuff(buffer);
@@ -79,8 +81,13 @@ client1.on('data', (data) => {
   console.log(`Data from server: ${data.toJSON()}`);
   const formattedData = catchData(data);
   console.log('formattedData', formattedData.get('BlkBegDaq').toString(16));
+  console.log('formattedData', formattedData.get('MdlRunCnt'));
   console.log('formattedData', formattedData.get('MdlAirScl'));
-  console.log('formattedData', formattedData.get('BlkEndDaq').toString(16));
+  console.log('formattedData', formattedData.get('MdlGraScl'));
+  console.log('formattedData', formattedData.get('MdlDisErr'));
+  console.log('formattedData', formattedData.get('MdlInjOut'));
+  console.log('formattedData', formattedData.get('MdlDruOut'));
+  console.log('formattedData', formattedData.get('MdlAirOut'));
 });
 client1.on('close', () => {
   console.log('Connection closed');
