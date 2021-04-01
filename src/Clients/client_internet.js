@@ -1,97 +1,67 @@
 const net = require('net');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const performance = require('perf_hooks');
+const { formatServerData } = require('../Structs/DataStruct');
+const { io } = require('../Socket');
 
 const client1 = new net.Socket();
-const { Struct } = require('struct');
 
-const _ = require('c-struct');
-const { Socket } = require('dgram');
-const { connectData } = require('./client_data');
-const { client } = require('../database/connection');
+// const { Socket } = require('dgram');
+// const { dirname } = require('path');
+// const { Z_ASCII } = require('zlib');
+// const { formatWifiData } = require('../Structs/WifiStruct');
+// const { connectData } = require('./client_data');
+// const { client } = require('../database/connection');
 
-function catchWifiInformations(buffer) {
-  const wifi = new Struct()
-    .word32Ule('Beg')
-    .charsnt('Sid', 31)
-    .charsnt('Pas', 31)
-    .word8('Chn')
-    .word8('Hid')
-    .word32Ule('End');
-  // eslint-disable-next-line
-  wifi._setBuff(buffer);
+const { processLineByLine } = require('../ReadStruct/ReadStruct');
 
-  const {
-    Beg, Sid, Pas, Chn, Hid, End,
-  } = wifi.fields;
-
-  const obj = {
-    Beg: Beg.toString(16), Sid, Pas, Chn, Hid, End: End.toString(16),
-  };
-
-  return obj;
-
-  // console.log(obj);
-
-  // console.log(wifi.fields);
-
-  // const formattedWifi = {
-  //   Beg: Number(wifi.get('Beg')).toString(16),
-  //   Sid: wifi.get('Sid'),
-  //   Pas: wifi.get('Pas'),
-  //   Chn: wifi.get('Chn'),
-  //   Hid: wifi.get('Hid'),
-  //   End: Number(wifi.get('End')).toString(16),
-  // }
-
-  // return formattedWifi;
-}
-
-function catchData(buffer) {
-  const serverData = new Struct()
-    .word32Ule('BlkBegDaq')
-    .word32Ule('MdlRunCnt')
-    .chars('BlkNotTrc', 108)
-    .floatle('MdlAirScl') // Temperatura do Ar Scaled = 175
-    .floatle('MdlGraScl') // Temperatura do Grao Scaled = 145
-    .floatle('MdlDisErr') // Erro do Modelo = 5
-    .floatle('MdlInjOut') // Percentual de chama = 25
-    .floatle('MdlDruOut') // Percentual de tambor = 65
-    .floatle('MdlAirOut') // Percentual de ar = 75
-    .word32Ule('BlkEndDaq');
-    // eslint-disable-next-line
-   serverData._setBuff(buffer);
-  return serverData;
-}
 function connectWifi() {
   client1.connect(555, '192.168.5.1', () => {
     console.log('Client 1: connection established with server');
     client1.write('Connected');
     client1.destroy();
-    client1.connect(888, '192.168.5.1', () => {});
+    client1.connect(888, '192.168.5.1', () => {
+      client1.write('Connected');
+    });
   });
 }
 connectWifi();
-// setTimeout(() => {
-//   destroyConnection();
-// }, 1000);
-// setTimeout(() => {
-//   connectData();
-// }, 3000);
-
-client1.on('data', (data) => {
-  console.log(`Data from server: ${data.toJSON()}`);
-  const formattedData = catchData(data);
-  console.log('formattedData', formattedData.get('BlkBegDaq').toString(16));
-  console.log('formattedData', formattedData.get('MdlRunCnt'));
-  console.log('formattedData', formattedData.get('MdlAirScl'));
-  console.log('formattedData', formattedData.get('MdlGraScl'));
-  console.log('formattedData', formattedData.get('MdlDisErr'));
-  console.log('formattedData', formattedData.get('MdlInjOut'));
-  console.log('formattedData', formattedData.get('MdlDruOut'));
-  console.log('formattedData', formattedData.get('MdlAirOut'));
+const t0 = performance.performance.now();
+io.on('connection', (socket) => {
+  console.log(socket.id);
+  client1.on('data', (data) => {
+    const formattedData = formatServerData(data);
+    if (formattedData.get('BlkBegDaq').toString(16) !== 'cccccccc'
+  || formattedData.get('BlkEndDaq').toString(16) !== 'dddddddd') return;
+    // console.log('BlkBegDaq', formattedData.get('BlkBegDaq').toString(16));
+    // console.log('MdlRunCnt', formattedData.get('MdlRunCnt'));
+    // console.log('MdlAirScl', formattedData.get('MdlAirScl'));
+    // console.log('MdlGraScl', formattedData.get('MdlGraScl'));
+    // console.log('MdlDisErr', formattedData.get('MdlDisErr'));
+    // console.log('MdlInjOut', formattedData.get('MdlInjOut'));
+    // console.log('MdlDruOut', formattedData.get('MdlDruOut'));
+    // console.log('MdlAirOut', formattedData.get('MdlAirOut'));
+    // console.log('BlkEndDaq', formattedData.get('BlkEndDaq').toString(16));
+    // if (!did) {
+    // writer.write(data);
+    fs.appendFile(path.join('src/RoastArchive/TorraLive'), data, 'binary', () => {});
+    io.to(socket.id).emit('realData', formattedData);
+  //   did = true;
+  // }
+  });
 });
-client1.on('close', () => {
-  console.log('Connection closed');
-});
+const t1 = performance.performance.now();
+// processLineByLine();
+// setTimeout(() => {
+//   fs.appendFile(path.join('src/RoastArchive/', 'LiveData'), `${buffer}`, (err) => {
+//     if (err) throw err;
+//   });
+// }, 10000);
+// client1.on('close', () => {
+//   console.log('Connection closed');
+// });
 
 // async function destroyConnection() {
 //   return client1.destroy();
@@ -146,5 +116,23 @@ client1.on('close', () => {
 //     return resp.status(500).json({ Message: 'Erro ao mudr o nome da rede' });
 //   }
 // }
+setInterval(() => {
+  const { freemem, totalmem } = os;
+  const total = parseInt(totalmem() / 1024 / 1024);
+  const mem = parseInt(freemem() / 1024 / 1024);
+  const percents = parseInt((mem / total) * 100);
+  const writeFile = t1 - t0;
+  const pcStats = {
+    free: `${mem} MB`,
+    total: `${total} MB`,
+    usage: `${percents}%`,
+    timeWriting: `${writeFile} ms`,
+  };
+  console.clear();
+  console.log('/********Real-time usage of Tablet RAM*********/');
+  console.table(pcStats);
+  const used = process.memoryUsage().heapUsed / 1024 / 1024;
+  console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
+}, 1000);
 
 module.exports = client1;

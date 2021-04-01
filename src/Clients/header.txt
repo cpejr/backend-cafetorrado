@@ -367,7 +367,7 @@ typedef struct
 	bchst_t     BchModSts;
 	memst_t     MemStrReq;
 	memst_t     MemModSts;
-	blk_t       BlkEndDaq;
+	blk_t       BlkEndDaq; // 4
 } daq_t;
 
 #endif /* INC_HEADER_H_ */

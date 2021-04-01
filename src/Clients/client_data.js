@@ -1,8 +1,8 @@
 // Client que utilizara a porta 555 e recebera os parametros da maquina
-const net = require('net');
-const { Struct } = require('struct');
+// const net = require('net');
+// const { Struct } = require('struct');
 
-const { client1 } = require('./client_internet');
+// const { client1 } = require('./client_internet');
 
 // function parseData(buffer){
 // const serverData = new Struct()
