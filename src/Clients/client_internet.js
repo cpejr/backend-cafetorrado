@@ -1,22 +1,110 @@
-// Client que utilizara a porta 888 e ira configurar a maquina
-
 const net = require('net');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const performance = require('perf_hooks');
+const { formatServerData } = require('../Structs/DataStruct');
+const { io } = require('../Socket');
 
 const client1 = new net.Socket();
 
-client1.connect(888, '192.164.4.1', () => {
-  console.log('Client 1: connection established with server');
-  client1.write('Connected');
-});
+const { processLineByLine } = require('../ReadStruct/ReadStruct');
 
-client1.setEncoding('utf-8');
+function connectWifi() {
+  client1.connect(555, '192.168.5.1', () => {
+    console.log('Client 1: Wifi connection established with server');
+    client1.write('Connected');
+    client1.destroy();
+    client1.connect(888, '192.168.5.1', () => {
+      console.log('Client 1: Data connection established with server');
+      client1.write('Connected');
+    });
+  });
+}
+connectWifi();
 
+// io.on('connection', (socket) => {
+//   console.log(socket.id);
 client1.on('data', (data) => {
-  console.log(`Data from server: ${data}`);
+  const formattedData = formatServerData(data);
+  if (formattedData.get('BlkBegDaq').toString(16) !== 'cccccccc'
+  || formattedData.get('BlkEndDaq').toString(16) !== 'dddddddd') return;
+  fs.appendFile(path.join('src/RoastArchive/TorraLive'), data, 'binary', () => {});
+  io.to(socket.id).emit('realData', formattedData); s;
+  // }
 });
+// });
 
 client1.on('close', () => {
   console.log('Connection closed');
 });
+
+// async function writeNewWifi(req, resp) {
+//   try {
+//     const { newName } = req.body;
+
+//     console.log(newName);
+
+//     const wifi = new Struct()
+//       .word32Ule('Beg')
+//       .charsnt('Sid', 31)
+//       .charsnt('Pas', 31)
+//       .word8('Chn')
+//       .word8('Hid')
+//       .word32Ule('End');
+//     // eslint-disable-next-line
+
+//     console.log(parseInt('0x44444444'));
+
+//     wifi.allocate();
+//     const buf = wifi.buffer();
+
+//     for (let i = 0; i < buf.length; i++) {
+//       buf[i] = 0;
+//     }
+//     console.log(buf);
+
+//     const proxy = wifi.fields;
+
+//     proxy.Beg = parseInt('0x44444444');
+//     proxy.Sid = newName;
+//     proxy.Pas = '000001_ROASTER';
+//     proxy.Chn = 13;
+//     proxy.Hid = 0;
+//     proxy.End = parseInt('0x55555555');
+//     console.log(buf);
+
+//     // wifi.set('Beg', parseInt('0x44444444'));
+//     // wifi.set('Sid', newName);
+//     // wifi.set('Pas', '000001_ROASTER');
+//     // wifi.set('Chn', 13);
+//     // wifi.set('Hid');
+//     // wifi.set('End', parseInt('0x55555555'));
+
+//     client1.write(buf);
+
+//     return resp.status(200).json({ Message: `Nome da rede mudado para ${newName}` });
+//   } catch (error) {
+//     console.log(error);
+//     return resp.status(500).json({ Message: 'Erro ao mudr o nome da rede' });
+//   }
+// }
+// setInterval(() => {
+//   const { freemem, totalmem } = os;
+//   const total = parseInt(totalmem() / 1024 / 1024);
+//   const mem = parseInt(freemem() / 1024 / 1024);
+//   const percents = parseInt((mem / total) * 100);
+//   const pcStats = {
+//     free: `${mem} MB`,
+//     total: `${total} MB`,
+//     usage: `${percents}%`,
+//     timeWriting: `${writeFile} ms`,
+//   };
+//   console.clear();
+//   console.log('/********Real-time usage of Tablet RAM*********/');
+//   console.table(pcStats);
+//   const used = process.memoryUsage().heapUsed / 1024 / 1024;
+//   console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
+// }, 1000);
 
 module.exports = client1;
