@@ -6,21 +6,21 @@ const { io } = require('../Socket'); */
 const { formatWifiData } = require('../Structs/WifiStruct');
 
 function connectWifi() {
-  const client1 = new net.Socket();
-  client1.connect(555, '192.168.5.1', () => {
-    console.log('Client 1: Wifi connection established with server');
-    client1.write('Connected');
+  const client = new net.Socket();
+  client.connect(555, '192.168.5.1', () => {
+    console.log('Client: Wifi connection established with server');
+    client.write('Connected');
 
-    client1.on('close', () => {
-      console.log('Connection closed');
+    client.on('close', () => {
+      console.log('Wifi configuration connection closed');
     });
 
-    client1.on('data', (data) => {
+    client.on('data', (data) => {
       const formattedData = formatWifiData(data);
       console.log('formattedData', formattedData);
     });
   });
-  return client1;
+  return client;
 }
 
 // io.on('connection', (socket) => {

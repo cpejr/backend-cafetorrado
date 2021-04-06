@@ -1,6 +1,8 @@
 const express = require('express');
 const BurnController = require('./controllers/BurnController');
-const { connectToWifi, disconnectWifi } = require('./Clients/connectionManager');
+const {
+  connectToWifi, disconnectWifi, connectToDataPort, disconnectData,
+} = require('./Clients/connectionManager');
 
 const routes = express.Router();
 
@@ -9,6 +11,9 @@ routes.get('/', BurnController.get);
 
 routes.get('/connectWifi', connectToWifi);
 routes.get('/disconnectWifi', disconnectWifi);
+
+routes.get('/connectData', connectToDataPort);
+routes.get('/disconnectData', disconnectData);
 
 // routes.post('/wifiName', writeNewWifi);
 
