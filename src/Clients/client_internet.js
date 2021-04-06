@@ -1,43 +1,31 @@
 const net = require('net');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const performance = require('perf_hooks');
-const { formatServerData } = require('../Structs/DataStruct');
-const { io } = require('../Socket');
-
-const client1 = new net.Socket();
-
-const { processLineByLine } = require('../ReadStruct/ReadStruct');
+/* const fs = require('fs'); */
+/* const path = require('path'); */
+/* const { formatServerData } = require('../Structs/DataStruct');
+const { io } = require('../Socket'); */
+const { formatWifiData } = require('../Structs/WifiStruct');
 
 function connectWifi() {
+  const client1 = new net.Socket();
   client1.connect(555, '192.168.5.1', () => {
     console.log('Client 1: Wifi connection established with server');
     client1.write('Connected');
-    client1.destroy();
-    client1.connect(888, '192.168.5.1', () => {
-      console.log('Client 1: Data connection established with server');
-      client1.write('Connected');
+
+    client1.on('close', () => {
+      console.log('Connection closed');
+    });
+
+    client1.on('data', (data) => {
+      const formattedData = formatWifiData(data);
+      console.log('formattedData', formattedData);
     });
   });
+  return client1;
 }
-connectWifi();
 
 // io.on('connection', (socket) => {
 //   console.log(socket.id);
-client1.on('data', (data) => {
-  const formattedData = formatServerData(data);
-  if (formattedData.get('BlkBegDaq').toString(16) !== 'cccccccc'
-  || formattedData.get('BlkEndDaq').toString(16) !== 'dddddddd') return;
-  fs.appendFile(path.join('src/RoastArchive/TorraLive'), data, 'binary', () => {});
-  io.to(socket.id).emit('realData', formattedData); s;
-  // }
-});
 // });
-
-client1.on('close', () => {
-  console.log('Connection closed');
-});
 
 // async function writeNewWifi(req, resp) {
 //   try {
@@ -107,4 +95,4 @@ client1.on('close', () => {
 //   console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
 // }, 1000);
 
-module.exports = client1;
+module.exports = { connectWifi };
