@@ -1,6 +1,11 @@
 const net = require('net');
-
 const { formatServerData } = require('../Structs/DataStruct');
+
+const io = require('socket.io')(9000, {
+  cors: {
+    origin: '*',
+  },
+});
 
 function connectData() {
   const client1 = new net.Socket();
@@ -14,7 +19,9 @@ function connectData() {
 
     client1.on('data', (data) => {
       const formattedData = formatServerData(data);
-      console.log('formattedData', formattedData);
+      const validatorBegin = formattedData.get('BlkBegDaq').toString(16);
+      const validatorEnd = formattedData.get('BlkEndDaq').toString(16);
+      if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd') { io.emit('realData', formattedData); }
     });
   });
   return client1;
