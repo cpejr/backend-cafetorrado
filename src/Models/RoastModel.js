@@ -4,21 +4,15 @@ const path = require('path');
 const connection = require('../database/connection');
 
 const timestamp = Date.now();
-const tempData = [];
-for (let i = 0; i < 5000; i++) {
-  tempData.push(Math.random().toFixed(2));
-}
+
 module.exports = {
   async create(roast) {
     roast.roast_id = uuidv4();
     roast.timestamp = timestamp;
-    fs.mkdir(path.join('src/RoastArchive', `${roast.name}`), 0777 ,(err) => {
+    fs.rename('src/RoastArchive/TEMPORARY', `src/RoastArchive/${roast.roast_id}`, (err) => {
       if (err) throw err;
-      fs.appendFile(path.join(`src/RoastArchive/${roast.name}`, `${roast.roast_id}`), `${tempData}`, (err) => {
-        if (err) throw err;
-      });
     });
-    
+
     const result = await connection('roast').insert(roast);
     return result;
   },

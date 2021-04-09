@@ -1,14 +1,16 @@
 const express = require('express');
-const BurnController = require('./controllers/BurnController');
+const RoastController = require('./Controllers/RoastController');
 const {
   connectToWifi, disconnectWifi, connectToDataPort, disconnectData,
 } = require('./Clients/connectionManager');
 
 const routes = express.Router();
+// Server side
+routes.post('/setChartParams', RoastController.create);
+routes.get('/', RoastController.get);
+routes.delete('/deleteLastRoast', RoastController.deleteLast);
 
-routes.post('/', BurnController.create);
-routes.get('/', BurnController.get);
-
+// socket side
 routes.get('/connectWifi', connectToWifi);
 routes.get('/disconnectWifi', disconnectWifi);
 
