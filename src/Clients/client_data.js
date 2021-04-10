@@ -1,23 +1,41 @@
+const fs = require('fs');
+const path = require('path');
 const net = require('net');
-
 const { formatServerData } = require('../Structs/DataStruct');
 
-function connectData() {
-  const client1 = new net.Socket();
-  client1.connect(888, '192.168.5.1', () => {
-    console.log('Client 1: Data connection established with server');
-    client1.write('Connected');
+const io = require('socket.io')(9000, {
+  cors: {
+    origin: '*',
+  },
+});
 
-    client1.on('close', () => {
+async function connectData() {
+  fs.mkdir(path.join('src/RoastArchive', 'TEMPORARY'), 0777, (err) => { 
+    if(err) throw err;
+    fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), '', (err) => { if(err) throw err; })
+  })
+
+  const client = new net.Socket();
+  client.connect(888, '192.168.5.1', () => {
+    console.log('Client 1: Data connection established with server');
+    client.write('Connected');
+
+    client.on('close', () => {
       console.log('Data connection closed');
     });
 
-    client1.on('data', (data) => {
+    client.on('data', (data) => {
       const formattedData = formatServerData(data);
-      console.log('formattedData', formattedData);
+      const validatorBegin = formattedData.get('BlkBegDaq').toString(16);
+      const validatorEnd = formattedData.get('BlkEndDaq').toString(16);
+      if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd') {
+        io.emit('realData', formattedData);
+        fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
+      }
     });
   });
-  return client1;
+  console.log('done');
+  return client;
 }
 
 module.exports = { connectData };

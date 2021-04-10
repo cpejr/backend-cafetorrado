@@ -1,29 +1,17 @@
 const express = require('express');
 const morgan = require('morgan');
-const routes = require('./Routes');
+const cors = require('cors');
+const routes = require('./routes');
 
 const app = express();
 
+const corsOptions = {
+  exposedHeaders: 'X-Total-Count',
+};
+
+app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true,
-}));
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Acess-Control-Allow-Origin',
-    'Origin, X-requested-with, Content-type, Access-Control-Allow-Header',
-  );
-
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Origin', 'PUT, POST, PATCH, DELETE, GET');
-    return res.status(200).send({});
-  }
-
-  return next();
-});
 
 app.use(routes);
 

@@ -2,7 +2,7 @@ const net = require('net');
 /* const fs = require('fs'); */
 /* const path = require('path'); */
 /* const { formatServerData } = require('../Structs/DataStruct');
-const { io } = require('../Socket'); */
+*/
 const { formatWifiData } = require('../Structs/WifiStruct');
 
 function connectWifi() {

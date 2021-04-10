@@ -34,7 +34,7 @@ async function disconnectWifi(req, res) {
 async function connectToDataPort(req, res) {
   if (!clientData && !clientWifi) {
     try {
-      clientData = connectData();
+      clientData = await connectData();
       return res.status(200).json({ Message: 'Connection to data PORT estabilished' });
     } catch (error) {
       console.log(error);
@@ -46,6 +46,7 @@ async function connectToDataPort(req, res) {
 }
 
 async function disconnectData(req, res) {
+  console.log(clientData);
   if (clientData) {
     try {
       clientData.destroy();
