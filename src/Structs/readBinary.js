@@ -1,11 +1,11 @@
 const { formatServerData } = require('./toStruct_Data');
 
-function ReadBinary(data) {
-  const vec = [];
+async function ReadBinary(data) {
+  const vec = [...data];
   const subVec = [];
   const sendVec = [];
   let i = 0;
-  vec.push(...data);
+
   while (vec.length !== 0) {
     subVec[i] = vec.splice(0, 1436);
     i += 1;

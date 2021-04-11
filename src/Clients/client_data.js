@@ -11,7 +11,7 @@ async function connectData() {
   })
 
   const client = new net.Socket();
-  client.connect(888, '192.168.5.1', () => {
+  client.connect(888, '192.168.4.1', () => {
     console.log('Client 1: Data connection established with server');
     client.write('Connected');
 
