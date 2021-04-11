@@ -6,10 +6,10 @@ const {
 
 const routes = express.Router();
 // Server side
-routes.post('/setChartParams', RoastController.create);
 routes.get('/', RoastController.get);
+routes.post('/setChartParams', RoastController.create);
 routes.delete('/deleteLastRoast', RoastController.deleteLast);
-
+routes.get('/getUniqueRoast/:name', RoastController.getUniqueRoast);
 // socket side
 routes.get('/connectWifi', connectToWifi);
 routes.get('/disconnectWifi', disconnectWifi);

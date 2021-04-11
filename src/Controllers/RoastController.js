@@ -1,5 +1,8 @@
 const fs = require('fs');
+const getFileData = require('../Socket/Data');
+
 const roastModel = require('../Models/RoastModel');
+const { SendStaticData } = require('../Socket/SendStaticData');
 
 module.exports = {
   async create(req, res) {
@@ -32,4 +35,16 @@ module.exports = {
     return res.status(200).json({ message: 'Roast sucessfully Deleted' });
   },
 
+  async getUniqueRoast(req, res) {
+    const { name } = req.params;
+    const roastID = await roastModel.getRoastID(name);
+    const binary = await getFileData(roastID);
+    const data = await SendStaticData(binary);
+    return res.status(200).json({
+      roastID,
+      name,
+      status: 'send',
+      data,
+    });
+  },
 };
