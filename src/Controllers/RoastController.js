@@ -39,12 +39,12 @@ module.exports = {
     const { name } = req.params;
     const roastID = await roastModel.getRoastID(name);
     const binary = await getFileData(roastID);
-    await SendStaticData(binary);
+    const data = await SendStaticData(binary);
     return res.status(200).json({
       roastID,
       name,
       status: 'send',
-      binary,
+      data,
     });
   },
 };
