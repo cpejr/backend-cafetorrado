@@ -3,7 +3,7 @@ const net = require('net');
 /* const path = require('path'); */
 /* const { formatServerData } = require('../Structs/DataStruct');
 */
-const { formatWifiData } = require('../Structs/WifiStruct');
+const { formatWifiData } = require('../Structs/toStruct_Wifi');
 
 function connectWifi() {
   const client = new net.Socket();

@@ -1,13 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
-const { formatServerData } = require('../Structs/DataStruct');
-
-const io = require('socket.io')(9000, {
-  cors: {
-    origin: '*',
-  },
-});
+const { formatServerData } = require('../Structs/toStruct_Data');
+const { io } = require('../Socket/Assets')
 
 async function connectData() {
   fs.mkdir(path.join('src/RoastArchive', 'TEMPORARY'), 0777, (err) => { 
