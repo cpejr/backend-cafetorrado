@@ -6,12 +6,15 @@ const { io } = require('../Socket/Assets')
 
 async function connectData() {
   fs.mkdir(path.join('src/RoastArchive', 'TEMPORARY'), 0777, (err) => { 
-    if(err) throw err;
+    if(err) {
+      fs.truncate('src/RoastArchive/TEMPORARY', 0, () => {console.log('done')})
+      fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), '', (err) => { if(err) throw err; })
+    }
     fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), '', (err) => { if(err) throw err; })
   })
 
   const client = new net.Socket();
-  client.connect(888, '192.168.4.1', () => {
+  client.connect(888, '192.168.5.1', () => {
     console.log('Client 1: Data connection established with server');
     client.write('Connected');
 
