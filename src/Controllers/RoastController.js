@@ -1,7 +1,4 @@
 const fs = require('fs');
-const { performance } = require('perf_hooks');
-const getFileData = require('../Socket/Data');
-const { ReadBinary } = require('../Structs/readBinary');
 const roastModel = require('../Models/RoastModel');
 
 module.exports = {
@@ -35,19 +32,13 @@ module.exports = {
     return res.status(200).json({ message: 'Roast sucessfully Deleted' });
   },
 
-  async getUniqueRoast(req, res) {
+  async getUniqueRoastData(req, res) {
     try {
+      // eslint-disable-next-line
       const { roast_id } = req.params;
-      const { name, description } = await roastModel.getRoastByID(roast_id);
-      const binary = await getFileData(roast_id);
-      const data = await ReadBinary(binary);
-      console.log(t1 - t0);
-      return res.status(200).json({
-        name,
-        description,
-        status: 'send',
-        data,
-      });
+      // eslint-disable-next-line
+      const data = require(`../RoastArchive/${roast_id}/ParsedData.json`);
+      return res.status(200).json({ data });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ Message: 'ERRO', err });
