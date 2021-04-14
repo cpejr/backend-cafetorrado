@@ -9,7 +9,7 @@ const routes = express.Router();
 routes.get('/', RoastController.get);
 routes.post('/setChartParams', RoastController.create);
 routes.delete('/deleteLastRoast', RoastController.deleteLast);
-routes.get('/getUniqueRoast/:name', RoastController.getUniqueRoast);
+routes.get('/getUniqueRoast/:roast_id', RoastController.getUniqueRoast);
 // socket side
 routes.get('/connectWifi', connectToWifi);
 routes.get('/disconnectWifi', disconnectWifi);

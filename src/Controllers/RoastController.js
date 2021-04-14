@@ -1,8 +1,8 @@
 const fs = require('fs');
+const { performance } = require('perf_hooks');
 const getFileData = require('../Socket/Data');
-
+const { ReadBinary } = require('../Structs/readBinary');
 const roastModel = require('../Models/RoastModel');
-const { SendStaticData } = require('../Socket/SendStaticData');
 
 module.exports = {
   async create(req, res) {
@@ -36,15 +36,21 @@ module.exports = {
   },
 
   async getUniqueRoast(req, res) {
-    const { name } = req.params;
-    const roastID = await roastModel.getRoastID(name);
-    const binary = await getFileData(roastID);
-    const data = await SendStaticData(binary);
-    return res.status(200).json({
-      roastID,
-      name,
-      status: 'send',
-      data,
-    });
+    try {
+      const { roast_id } = req.params;
+      const { name, description } = await roastModel.getRoastByID(roast_id);
+      const binary = await getFileData(roast_id);
+      const data = await ReadBinary(binary);
+      console.log(t1 - t0);
+      return res.status(200).json({
+        name,
+        description,
+        status: 'send',
+        data,
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ Message: 'ERRO', err });
+    }
   },
 };

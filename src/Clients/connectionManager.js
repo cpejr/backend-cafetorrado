@@ -10,7 +10,6 @@ async function connectToWifi(req, res) {
       clientWifi = connectWifi();
       return res.status(200).json({ Message: 'Connection to Wifi configuration PORT estabilished' });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({ Message: 'Connection to Wifi configuration PORT failed' });
     }
   } else {
@@ -37,7 +36,6 @@ async function connectToDataPort(req, res) {
       clientData = await connectData();
       return res.status(200).json({ Message: 'Connection to data PORT estabilished' });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({ Message: 'Connection to data PORT failed' });
     }
   } else {
@@ -46,7 +44,6 @@ async function connectToDataPort(req, res) {
 }
 
 async function disconnectData(req, res) {
-  console.log(clientData);
   if (clientData) {
     try {
       clientData.destroy();

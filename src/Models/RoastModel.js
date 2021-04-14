@@ -33,8 +33,8 @@ module.exports = {
       .insert(txtRoast);
     return result;
   },
-  async getRoastID(name) {
-    const result = await connection.select('roast_id').from('roast').where({ name });
+  async getRoastByID(roast_id) {
+    const result = await connection('roast').select('*').where({ roast_id }).first();
     return result;
   },
 };
