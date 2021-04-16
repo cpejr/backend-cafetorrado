@@ -1,5 +1,7 @@
 const { connectWifi } = require('./client_internet');
 const { connectData } = require('./client_data');
+const { wifiDataToBuffer } = require('../Structs/wifi_converter');
+const { formatCmdData } = require('../Structs/toStruct_cmdData');
 
 let clientWifi;
 let clientData;
@@ -7,7 +9,7 @@ let clientData;
 async function connectToWifi(req, res) {
   if (!clientWifi && !clientData) {
     try {
-      clientWifi = connectWifi();
+      clientWifi = await connectWifi();
       return res.status(200).json({ Message: 'Connection to Wifi configuration PORT estabilished' });
     } catch (error) {
       return res.status(500).json({ Message: 'Connection to Wifi configuration PORT failed' });
@@ -56,6 +58,20 @@ async function disconnectData(req, res) {
   return res.status(201).json({ Message: 'There was no connection to data PORT' });
 }
 
+async function writeNewWifi(req, res) {
+  if (clientWifi) {
+    try {
+      const { wifiName, password, hidden } = req.body;
+      const buffer = await wifiDataToBuffer({ wifiName, password, hidden });
+      clientWifi.write(buffer);
+      clientWifi = null;
+      return res.status(200).json({ Message: 'Sucessfully changes wifi info' });
+    } catch (error) {
+      return res.status(500).json({ Message: 'Could not change wifi configs' });
+    }
+  }
+  return res.status(500).json({ Message: 'No connection established' });
+}
 module.exports = {
-  connectToWifi, disconnectWifi, connectToDataPort, disconnectData,
+  connectToWifi, disconnectWifi, connectToDataPort, disconnectData, writeNewWifi,
 };

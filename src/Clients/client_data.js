@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const net = require('net');
 const { formatServerData } = require('../Structs/toStruct_Data');
-const { performance } = require('perf_hooks')
 const { io } = require('../Socket/Assets')
+const { CommandData } = require('../Structs/toStruct_cmdData')
 let separator = '';
 
 async function connectData() {
@@ -32,9 +32,14 @@ async function connectData() {
       });
   
       client.on('data', (data) => {
+        //console.log(CommandData())
+        //client.write(CommandData());
         const formattedData = formatServerData(data);
         const validatorBegin = formattedData.get('BlkBegDaq').toString(16);
         const validatorEnd = formattedData.get('BlkEndDaq').toString(16);
+        console.log(formattedData.fields.MdlInjOut, ' inj');
+        console.log(formattedData.fields.MdlDruOut, 'dru');
+        console.log(formattedData.fields.MdlAirOut, 'air');
         if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd' && validatorBegin !== 0 && validatorEnd !== 0) {
           io.emit('realData', formattedData);
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })

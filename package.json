@@ -29,6 +29,7 @@
     "websocket": "^1.0.33"
   },
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "start2": "nodemon src/server.js"
   }
 }
