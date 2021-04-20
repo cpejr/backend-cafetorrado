@@ -3,7 +3,8 @@ const path = require('path');
 const net = require('net');
 const { formatServerData } = require('../Structs/toStruct_Data');
 const { io } = require('../Socket/Assets')
-const { CommandData } = require('../Structs/toStruct_cmdData')
+const { performance } = require('perf_hooks')
+const { updateStructCommands, sendData } = require('../Structs/toStruct_cmdData')
 let separator = '';
 
 async function connectData() {
@@ -32,20 +33,24 @@ async function connectData() {
       });
   
       client.on('data', (data) => {
-        //console.log(CommandData())
-        //client.write(CommandData());
+        const t0 =performance.now()
         const formattedData = formatServerData(data);
         const validatorBegin = formattedData.get('BlkBegDaq').toString(16);
         const validatorEnd = formattedData.get('BlkEndDaq').toString(16);
-        console.log(formattedData.fields.MdlInjOut, ' inj');
-        console.log(formattedData.fields.MdlDruOut, 'dru');
-        console.log(formattedData.fields.MdlAirOut, 'air');
         if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd' && validatorBegin !== 0 && validatorEnd !== 0) {
+          // console.log(formattedData.fields.MdlInjOut, ' inj');
+          // console.log(formattedData.fields.MdlDruOut, 'dru');
+          // console.log(formattedData.fields.MdlAirOut, 'air');
           io.emit('realData', formattedData);
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(formattedData.fields), 'utf-8', (err) => { if(err) throw err; })  
           if(!separator) separator = ',\n';
+          client.write(sendData())
+          updateStructCommands(formattedData.fields);
+          const t1 = performance.now();
+          console.log(t1 - t0)
         }
+        
       });
     });
   }catch(err) {

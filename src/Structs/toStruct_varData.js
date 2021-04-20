@@ -7,6 +7,7 @@ function createManualStruct() {
     .floatle('MdlManCdr')
     .floatle('MdlManCar')
     .chars('HnqDbg', 24);
+
   variableStruct.allocate();
 
   return variableStruct;

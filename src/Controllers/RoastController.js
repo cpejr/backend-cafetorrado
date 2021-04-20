@@ -1,5 +1,6 @@
 const fs = require('fs');
 const roastModel = require('../Models/RoastModel');
+const { updateStructCommands } = require('../Structs/toStruct_cmdData');
 
 module.exports = {
   async create(req, res) {
@@ -42,6 +43,15 @@ module.exports = {
     } catch (err) {
       console.error(err);
       return res.status(500).json({ Message: 'ERRO', err });
+    }
+  },
+  async bounceToUpdate(req, res) {
+    try {
+      updateStructCommands(req.body);
+      return res.status(200).json({ Message: 'Sucessfully changed params' });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ Message: 'There has been an error on the update' });
     }
   },
 };
