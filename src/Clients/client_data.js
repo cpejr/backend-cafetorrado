@@ -46,7 +46,7 @@ async function connectData() {
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(formattedData.fields), 'utf-8', (err) => { if(err) throw err; })  
           if(!separator) separator = ',\n';
           client.write(sendData())
-          updateStructCommands(formattedData.fields);
+          //updateStructCommands(formattedData.fields);
           const t1 = performance.now();
           console.log(t1 - t0)
         }
