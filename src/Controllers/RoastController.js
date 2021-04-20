@@ -1,8 +1,6 @@
 const fs = require('fs');
-const getFileData = require('../Socket/Data');
-
 const roastModel = require('../Models/RoastModel');
-const { SendStaticData } = require('../Socket/SendStaticData');
+const { updateStructCommands } = require('../Structs/toStruct_cmdData');
 
 module.exports = {
   async create(req, res) {
@@ -35,16 +33,25 @@ module.exports = {
     return res.status(200).json({ message: 'Roast sucessfully Deleted' });
   },
 
-  async getUniqueRoast(req, res) {
-    const { name } = req.params;
-    const roastID = await roastModel.getRoastID(name);
-    const binary = await getFileData(roastID);
-    const data = await SendStaticData(binary);
-    return res.status(200).json({
-      roastID,
-      name,
-      status: 'send',
-      data,
-    });
+  async getUniqueRoastData(req, res) {
+    try {
+      // eslint-disable-next-line
+      const { roast_id } = req.params;
+      // eslint-disable-next-line
+      const data = require(`../RoastArchive/${roast_id}/ParsedData.json`);
+      return res.status(200).json({ data });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ Message: 'ERRO', err });
+    }
+  },
+  async bounceToUpdate(req, res) {
+    try {
+      updateStructCommands(req.body);
+      return res.status(200).json({ Message: 'Sucessfully changed params' });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ Message: 'There has been an error on the update' });
+    }
   },
 };
