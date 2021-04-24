@@ -5,22 +5,24 @@ const net = require('net');
 */
 const { wifiBufferToData } = require('../Structs/wifi_converter');
 
-function connectWifi() {
+let formattedData;
+async function connectWifi() {
   const client = new net.Socket();
-  client.connect(555, '192.168.5.1', () => {
-    console.log('Client: Wifi connection established with server');
-    client.write('Connected');
+  return new Promise((resolve) => {
+    client.connect(555, '192.168.5.1', () => {
+      console.log('Client: Wifi connection established with server');
+      client.write('Connected');
 
-    client.on('close', () => {
-      console.log('Wifi configuration connection closed');
-    });
+      client.on('close', () => {
+        console.log('Wifi configuration connection closed');
+      });
 
-    client.on('data', (data) => {
-      const formattedData = wifiBufferToData(data);
-      console.log('formattedData', formattedData);
+      client.on('data', (data) => {
+        formattedData = wifiBufferToData(data);
+        resolve([client, formattedData]);
+      });
     });
   });
-  return client;
 }
 
 module.exports = { connectWifi };

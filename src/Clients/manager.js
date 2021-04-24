@@ -2,20 +2,20 @@ const { connectWifi } = require('./client_internet');
 const { connectData } = require('./client_data');
 const { wifiDataToBuffer } = require('../Structs/wifi_converter');
 const { formatCmdData } = require('../Structs/toStruct_cmdData');
-
+/*eslint-disable*/
 let clientWifi;
 let clientData;
-
+let wifiData;
 async function connectToWifi(req, res) {
   if (!clientWifi && !clientData) {
     try {
-      clientWifi = await connectWifi();
-      return res.status(200).json({ Message: 'Connection to Wifi configuration PORT estabilished' });
+      [clientWifi, wifiData] = await connectWifi()
+      return res.status(200).json({ Message: 'Connection to Wifi configuration PORT estabilished', wifiData });
     } catch (error) {
       return res.status(500).json({ Message: 'Connection to Wifi configuration PORT failed' });
     }
   } else {
-    return res.status(201).json({ Message: 'Connection already estabilished with one of the ports' });
+    return res.status(201).json({ Message: 'Connection already estabilished with one of the ports', wifiData });
   }
 }
 
