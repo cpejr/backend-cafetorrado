@@ -38,9 +38,11 @@ async function connectData() {
         const validatorBegin = formattedData.get('BlkBegDaq').toString(16);
         const validatorEnd = formattedData.get('BlkEndDaq').toString(16);
         if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd' && validatorBegin !== 0 && validatorEnd !== 0) {
-          // console.log(formattedData.fields.MdlInjOut, ' inj');
-          // console.log(formattedData.fields.MdlDruOut, 'dru');
-          // console.log(formattedData.fields.MdlAirOut, 'air');
+          console.log(formattedData.fields.InvDgoSet[0].RO1, ' mis')
+          console.log(formattedData.fields.MdlAirOut, ' air')
+          console.log(formattedData.fields.InvDgoSet[0].RO2, ' ign')
+          console.log(formattedData.fields.InvDgoSet[1].RO1, ' exh')
+          console.log(formattedData.fields.InvDgoSet[1].RO2, ' alm')
           io.emit('realData', formattedData);
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(formattedData.fields), 'utf-8', (err) => { if(err) throw err; })  
@@ -48,7 +50,7 @@ async function connectData() {
           client.write(sendData())
           //updateStructCommands(formattedData.fields);
           const t1 = performance.now();
-          console.log(t1 - t0)
+          //console.log(t1 - t0)
         }
         
       });
