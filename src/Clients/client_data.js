@@ -4,7 +4,7 @@ const net = require('net');
 const { unpack_daq_t } = require('../Structs/daq_t');
 const { io } = require('../Socket/Assets')
 const { performance } = require('perf_hooks')
-const { sendData } = require('../Structs/cmd_t');
+const { send_cmd_t } = require('../Structs/cmd_t');
 const { parseHex } = require('../Structs/parseHex');
 const hexToBinary = require('hex-to-binary')
 
@@ -28,7 +28,6 @@ async function connectData() {
       client.write('Connected');
   
       client.on('close', () => {
-        console.log('this')
         fs.appendFile(path.join('src/RoastArchive/TEMPORARY','ParsedData.json'), '\n]', (err) => { if(err) throw err; })
         separator = '';
         client.destroy();
@@ -44,9 +43,8 @@ async function connectData() {
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(unpacked.fields), 'utf-8', (err) => { if(err) throw err; })  
           if(!separator) separator = ',\n';
-          console.log(unpacked.fields.MdlInjOut)
-          client.write(sendData())
-          //updateStructCommands(unpacked.fields);
+          console.log(unpacked.fields.MdlRunCnt)
+          client.write(send_cmd_t())
           const t1 = performance.now();
         }
         
