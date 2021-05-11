@@ -1,10 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
-const { formatServerData } = require('../Structs/toStruct_Data');
+const { formatServerData } = require('../Structs/daq_t');
 const { io } = require('../Socket/Assets')
 const { performance } = require('perf_hooks')
-const { updateStructCommands, sendData } = require('../Structs/toStruct_cmdData')
+const { updateStructCommands, sendData } = require('../Structs/set_cmd');
+const { parseHex } = require('../Structs/parseHex');
+const hexToBinary = require('hex-to-binary')
 let separator = '';
 
 async function connectData() {
@@ -31,26 +33,21 @@ async function connectData() {
         client.destroy();
         console.log('Data connection closed');
       });
-  
+      // cccccccc8417010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100002f43000011430000a04001010101010101010101010101010101000016430101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101dddddddd
+      // cccccccc8117010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100002f43000011430000a04001010101010101010101010101010101000016430101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101dddddddd
       client.on('data', (data) => {
-        const t0 =performance.now()
-        const formattedData = formatServerData(data);
-        const validatorBegin = formattedData.get('BlkBegDaq').toString(16);
-        const validatorEnd = formattedData.get('BlkEndDaq').toString(16);
+        const unpacked = formatServerData(data);
+        const validatorBegin = unpacked.get('BlkBegDaq').toString(16);
+        const validatorEnd = unpacked.get('BlkEndDaq').toString(16);
         if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd' && validatorBegin !== 0 && validatorEnd !== 0) {
-          console.log(formattedData.fields.InvDgoSet[0].RO1, ' mis')
-          console.log(formattedData.fields.MdlAirOut, ' air')
-          console.log(formattedData.fields.InvDgoSet[0].RO2, ' ign')
-          console.log(formattedData.fields.InvDgoSet[1].RO1, ' exh')
-          console.log(formattedData.fields.InvDgoSet[1].RO2, ' alm')
-          io.emit('realData', formattedData);
+          io.emit('realData', unpacked);
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
-          fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(formattedData.fields), 'utf-8', (err) => { if(err) throw err; })  
+          fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(unpacked.fields), 'utf-8', (err) => { if(err) throw err; })  
           if(!separator) separator = ',\n';
+          console.log(unpacked.fields.MdlInjOut)
           client.write(sendData())
-          //updateStructCommands(formattedData.fields);
+          //updateStructCommands(unpacked.fields);
           const t1 = performance.now();
-          //console.log(t1 - t0)
         }
         
       });

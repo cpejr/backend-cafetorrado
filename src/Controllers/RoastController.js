@@ -1,6 +1,6 @@
 const fs = require('fs');
 const roastModel = require('../Models/RoastModel');
-const { updateStructCommands } = require('../Structs/toStruct_cmdData');
+const { updateStructCommands } = require('../Structs/set_cmd');
 
 module.exports = {
   async create(req, res) {

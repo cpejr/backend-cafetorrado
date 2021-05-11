@@ -3,7 +3,6 @@ const RoastController = require('./Controllers/RoastController');
 const {
   connectToWifi, disconnectWifi, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
-const { updateStructCommands } = require('./Structs/toStruct_cmdData');
 
 const routes = express.Router();
 // Server side
