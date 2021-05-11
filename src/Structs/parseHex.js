@@ -7,6 +7,7 @@ struct.allocate();
 
 function parseHex(InvDgoSet) {
   const { 0: elem1, 1: elem2 } = InvDgoSet;
+
   struct.fields.elements = elem1;
   const buf1 = struct.buffer();
   const binary1 = hexToBinary(buf1.toString('hex'));

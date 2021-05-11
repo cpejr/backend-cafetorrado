@@ -1,12 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
-const { formatServerData } = require('../Structs/daq_t');
+const { unpack_daq_t } = require('../Structs/daq_t');
 const { io } = require('../Socket/Assets')
 const { performance } = require('perf_hooks')
-const { updateStructCommands, sendData } = require('../Structs/set_cmd');
+const { sendData } = require('../Structs/cmd_t');
 const { parseHex } = require('../Structs/parseHex');
 const hexToBinary = require('hex-to-binary')
+
 let separator = '';
 
 async function connectData() {
@@ -33,10 +34,9 @@ async function connectData() {
         client.destroy();
         console.log('Data connection closed');
       });
-      // cccccccc8417010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100002f43000011430000a04001010101010101010101010101010101000016430101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101dddddddd
-      // cccccccc8117010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100002f43000011430000a04001010101010101010101010101010101000016430101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101dddddddd
+
       client.on('data', (data) => {
-        const unpacked = formatServerData(data);
+        const unpacked = unpack_daq_t(data);
         const validatorBegin = unpacked.get('BlkBegDaq').toString(16);
         const validatorEnd = unpacked.get('BlkEndDaq').toString(16);
         if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd' && validatorBegin !== 0 && validatorEnd !== 0) {

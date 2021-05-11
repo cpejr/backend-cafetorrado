@@ -4,7 +4,7 @@ const ADC_CMAX = 3;
 const TMP_CMAX = 2;
 const INV_CMAX = 2;
 
-function formatServerData(buffer) {
+function unpack_daq_t(buffer) {
   const serverData = new Struct()
     .word32Ule('BlkBegDaq') // blk_t
     .word32Ule('MdlRunCnt')
@@ -65,4 +65,4 @@ function formatServerData(buffer) {
   return serverData;
 }
 
-module.exports = { formatServerData };
+module.exports = { unpack_daq_t };

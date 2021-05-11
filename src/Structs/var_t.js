@@ -1,10 +1,9 @@
 const { Struct } = require('struct');
-const { ReadBinary } = require('./parseHex');
 // AAAAAAAA0000000000000000000000000000000000000000000000000000010101010000BBBBBBBB
 // aaaaaaaa0000f042002081457848a149003aa44600000000000000000000010101010000bbbbbbbb
 
-function createManualStruct() {
-  const variableStruct = new Struct()
+function create_var_t() {
+  const var_t = new Struct()
     .word32Ule('BlkBegVar')
     .floatle('MdlManChr')
     .floatle('MdlManInj')
@@ -20,8 +19,8 @@ function createManualStruct() {
     .word8('MemStrReq')
     .word8('MdlModReq')
     .word32Ule('BlkEndVar');
-  variableStruct.allocate();
-  return variableStruct;
+  var_t.allocate();
+  return var_t;
 }
-createManualStruct();
-module.exports = { createManualStruct };
+
+module.exports = { create_var_t };

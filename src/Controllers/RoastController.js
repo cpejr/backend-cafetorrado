@@ -1,6 +1,6 @@
 const fs = require('fs');
 const roastModel = require('../Models/RoastModel');
-const { updateStructCommands } = require('../Structs/set_cmd');
+const { update_cmd_t } = require('../Structs/cmd_t');
 
 module.exports = {
   async create(req, res) {
@@ -47,7 +47,7 @@ module.exports = {
   },
   async bounceToUpdate(req, res) {
     try {
-      updateStructCommands(req.body);
+      update_cmd_t(req.body);
       return res.status(200).json({ Message: 'Sucessfully changed params' });
     } catch (err) {
       console.error(err);
