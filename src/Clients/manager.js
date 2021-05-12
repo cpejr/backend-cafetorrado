@@ -1,7 +1,7 @@
 const { connectWifi } = require('./client_internet');
 const { connectData } = require('./client_data');
 const { wifiDataToBuffer } = require('../Structs/wifi_converter');
-const { formatCmdData } = require('../Structs/toStruct_cmdData');
+
 /*eslint-disable*/
 let clientWifi;
 let clientData;

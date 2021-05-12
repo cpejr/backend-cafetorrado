@@ -1,10 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
-const { formatServerData } = require('../Structs/toStruct_Data');
+const { unpack_daq_t } = require('../Structs/daq_t');
 const { io } = require('../Socket/Assets')
 const { performance } = require('perf_hooks')
-const { updateStructCommands, sendData } = require('../Structs/toStruct_cmdData')
+const { send_cmd_t, update_cmd_t } = require('../Structs/cmd_t');
+const { parseHex } = require('../Structs/InvDgoSet');
+const hexToBinary = require('hex-to-binary')
+
 let separator = '';
 
 async function connectData() {
@@ -25,30 +28,23 @@ async function connectData() {
       client.write('Connected');
   
       client.on('close', () => {
-        console.log('this')
         fs.appendFile(path.join('src/RoastArchive/TEMPORARY','ParsedData.json'), '\n]', (err) => { if(err) throw err; })
         separator = '';
         client.destroy();
         console.log('Data connection closed');
       });
-  
+
       client.on('data', (data) => {
-        const t0 =performance.now()
-        const formattedData = formatServerData(data);
-        const validatorBegin = formattedData.get('BlkBegDaq').toString(16);
-        const validatorEnd = formattedData.get('BlkEndDaq').toString(16);
-        if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd' && validatorBegin !== 0 && validatorEnd !== 0) {
-          // console.log(formattedData.fields.MdlInjOut, ' inj');
-          // console.log(formattedData.fields.MdlDruOut, 'dru');
-          // console.log(formattedData.fields.MdlAirOut, 'air');
-          io.emit('realData', formattedData);
+        const unpacked = unpack_daq_t(data);
+        const validatorBegin = unpacked.get('BlkBegDaq').toString(16);
+        const validatorEnd = unpacked.get('BlkEndDaq').toString(16);
+        if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd') {
+          console.log(unpacked.fields.MdlAirOut)
+          io.emit('realData', unpacked);
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
-          fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(formattedData.fields), 'utf-8', (err) => { if(err) throw err; })  
+          fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(unpacked.fields), 'utf-8', (err) => { if(err) throw err; })  
           if(!separator) separator = ',\n';
-          client.write(sendData())
-          //updateStructCommands(formattedData.fields);
-          const t1 = performance.now();
-          console.log(t1 - t0)
+          client.write(send_cmd_t())
         }
         
       });
