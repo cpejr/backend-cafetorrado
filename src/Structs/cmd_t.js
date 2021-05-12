@@ -32,23 +32,25 @@ function create_cmd_t() {
 }
 
 const cmd_t = create_cmd_t();
-let dataToSend = 1;
 
 function update_cmd_t(data) {
   const {
-    MdlManChr, MdlManInj, MdlManCdr, MdlManCar, MdlExhAcv, MdlMisAcv, MdlIgnAcv, MdlAlmAcv,
+    MdlManChr, MdlManInj,
+    MdlManCdr, MdlManCar,
+    MdlExhAcv = 0, MdlMisAcv = 0,
+    MdlIgnAcv = 0, MdlAlmAcv = 0,
   } = data;
 
-  MdlManChr && (cmd_t.fields.CmdMemVal[0].MdlManChr = MdlManChr);
-  MdlManInj && (cmd_t.fields.CmdMemVal[0].MdlManInj = MdlManInj);
-  MdlManCdr && (cmd_t.fields.CmdMemVal[0].MdlManCdr = MdlManCdr);
-  MdlManCar && (cmd_t.fields.CmdMemVal[0].MdlManCar = MdlManCar);
-  cmd_t.fields.CmdMemVal[0].MdlExhAcv = dataToSend;
-  cmd_t.fields.CmdMemVal[0].MdlMisAcv = dataToSend;
-  cmd_t.fields.CmdMemVal[0].MdlIgnAcv = dataToSend;
-  cmd_t.fields.CmdMemVal[0].MdlAlmAcv = dataToSend;
+  cmd_t.fields.CmdMemVal[0].MdlManChr = MdlManChr ?? cmd_t.fields.CmdMemVal[0].MdlManChr;
+  cmd_t.fields.CmdMemVal[0].MdlManInj = MdlManInj ?? cmd_t.fields.CmdMemVal[0].MdlManInj;
+  cmd_t.fields.CmdMemVal[0].MdlManCdr = MdlManCdr ?? cmd_t.fields.CmdMemVal[0].MdlManCdr;
+  cmd_t.fields.CmdMemVal[0].MdlManCar = MdlManCar ?? cmd_t.fields.CmdMemVal[0].MdlManCar;
+  cmd_t.fields.CmdMemVal[0].MdlExhAcv = !!MdlExhAcv;
+  cmd_t.fields.CmdMemVal[0].MdlMisAcv = !!MdlMisAcv;
+  cmd_t.fields.CmdMemVal[0].MdlIgnAcv = !!MdlIgnAcv;
+  cmd_t.fields.CmdMemVal[0].MdlAlmAcv = !!MdlAlmAcv;
   // console.log(cmd_t.buffer().toString('hex'));
-  dataToSend = dataToSend ? 0 : 1;
+  console.log(cmd_t.buffer().toString('hex'));
 }
 
 function send_cmd_t() {

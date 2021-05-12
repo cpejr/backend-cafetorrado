@@ -5,7 +5,7 @@ const { unpack_daq_t } = require('../Structs/daq_t');
 const { io } = require('../Socket/Assets')
 const { performance } = require('perf_hooks')
 const { send_cmd_t, update_cmd_t } = require('../Structs/cmd_t');
-const { parseHex } = require('../Structs/parseHex');
+const { parseHex } = require('../Structs/InvDgoSet');
 const hexToBinary = require('hex-to-binary')
 
 let separator = '';
@@ -39,13 +39,12 @@ async function connectData() {
         const validatorBegin = unpacked.get('BlkBegDaq').toString(16);
         const validatorEnd = unpacked.get('BlkEndDaq').toString(16);
         if (validatorBegin === 'cccccccc' && validatorEnd === 'dddddddd') {
-          console.log(parseHex(unpacked.fields.InvDgoSet))
+          console.log(unpacked.fields.MdlAirOut)
           io.emit('realData', unpacked);
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(unpacked.fields), 'utf-8', (err) => { if(err) throw err; })  
           if(!separator) separator = ',\n';
           client.write(send_cmd_t())
-          const t1 = performance.now();
         }
         
       });
