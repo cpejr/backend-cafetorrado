@@ -1,6 +1,8 @@
 const { Struct } = require('struct');
 // AAAAAAAA0000000000000000000000000000000000000000000000000000010101010000BBBBBBBB
 // aaaaaaaa0000f042002081457848a149003aa44600000000000000000000010101010000bbbbbbbb
+// 000000000000000000000000000000000000000000000000000001010101000000000000
+// aaaaaaaa00000000000000000000000000000000000000000000000000000000bbbbbbbb
 
 function create_var_t() {
   const var_t = new Struct()
@@ -9,7 +11,7 @@ function create_var_t() {
     .floatle('MdlManInj')
     .floatle('MdlManCdr')
     .floatle('MdlManCar')
-    .chars('HnqDbg', 8)
+    .chars('HnqDbg', 4)
     .word8('MdlTarAcv')
     .word8('MdlTgrAcv')
     .word8('MdlExhAcv')
