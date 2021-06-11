@@ -7,6 +7,7 @@ const { performance } = require('perf_hooks')
 const { send_cmd_t, update_cmd_t } = require('../Structs/cmd_t');
 const { parseHex } = require('../Structs/InvDgoSet');
 const hexToBinary = require('hex-to-binary')
+const { safeEject } = require('./errorTreatment')
 
 let separator = '';
 
@@ -21,6 +22,7 @@ async function connectData() {
   })
 
   const client = new net.Socket();
+  safeEject.run( () => { 
   try{
     client.connect(888, '192.168.5.1', () => {
 
@@ -52,6 +54,7 @@ async function connectData() {
   }catch(err) {
     console.error(err)
   }
+})
   return client;
 }
 

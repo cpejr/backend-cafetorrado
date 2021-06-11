@@ -7,14 +7,17 @@ const { clientData, clientWifi } = require('./Clients/manager');
 wifi.init({ iface: null });
 
 const checkWifiConnection = async () => {
+  console.log('checou');
   const currentName = await getWifiName();
   wifi.getCurrentConnections((error, current) => {
     if (error) console.error(error);
-    if (current[0].ssid === currentName) { io.emit('wifiStatus', true); return; }
-    io.emit('wifiStatus', false);
+    if (current[0].ssid === currentName) { return true; }
+    return false;
   });
 };
 
 io.on('newPassword', (newName) => {
   setWifiName(newName);
 });
+
+module.exports = { checkWifiConnection };

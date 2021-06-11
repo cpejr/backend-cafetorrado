@@ -11,8 +11,8 @@ module.exports = {
   },
   async setWifiName(name) {
     try {
-      await connection('wifi').insert(JSON.stringify(name)).where('name');
-      return true;
+      const name = await connection('wifi').insert(JSON.stringify(name)).where('name');
+      return name;
     } catch (err) {
       console.error(err);
     }
