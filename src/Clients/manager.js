@@ -11,8 +11,10 @@ let clientData;
 let wifiData;
 
 const standByDataPort = new net.Socket()
-
+let tryedTimes = 0
 const reconnect = () => {
+  console.log(tryedTimes)
+  tryedTimes++
   !(!!standByDataPort) ? 
   ((standByDataPort = new net.Socket()) && reconnect()
   ) : (
