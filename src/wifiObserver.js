@@ -6,17 +6,21 @@ const { clientData, clientWifi } = require('./Clients/manager');
 
 wifi.init({ iface: null });
 
+const checker = async (currentName) => {
+  const { safeEject } = require('./Clients/errorTreatment');
+  safeEject.run(() => {
+    wifi.getCurrentConnections((error, current) => {
+      console.log(current[0].ssid, currentName.name);
+      if (error || !current || current[0].ssid !== currentName.name) { return false; }
+      if (current[0].ssid === currentName.name) { return true; }
+    });
+  });
+};
+
 const checkWifiConnection = async () => {
   const currentName = await getWifiName();
-  wifi.getCurrentConnections((error, current) => {
-    if (error) console.error(error);
-
-    if (current[0].ssid === currentName) {
-      return true;
-    }
-
-    return false;
-  });
+  const status = await checker(currentName);
+  return status;
 };
 
 io.on('newPassword', (newName) => {

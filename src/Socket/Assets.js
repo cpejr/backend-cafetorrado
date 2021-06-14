@@ -7,6 +7,6 @@ const io = require('socket.io')(9000, {
 const socket = { connection: null };
 const socketListener = () => socket.connection;
 
-io.on('connection', (socket_) => { socket.connection = socket_; });
+io.on('connection', (socket_) => { console.log('Socket on'); socket.connection = socket_; });
 
 module.exports = { io, socketListener };
