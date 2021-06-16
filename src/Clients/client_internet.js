@@ -1,15 +1,11 @@
 const net = require('net');
-/* const fs = require('fs'); */
-/* const path = require('path'); */
-/* const { formatServerData } = require('../Structs/DataStruct');
-*/
+const { safeEject } = require('./errorTreatment');
 const { wifiBufferToData } = require('../Structs/wifi_converter');
 
 let formattedData;
 async function connectWifi() {
   const client = new net.Socket();
-
-  return new Promise((resolve, reject) => {
+  safeEject.run(() => new Promise((resolve, reject) => {
     try {
       client.connect(555, '192.168.5.1', () => {
         console.log('Client: Wifi connection established with server');
@@ -27,7 +23,7 @@ async function connectWifi() {
     } catch (error) {
       reject(error);
     }
-  });
+  }));
 }
 
 module.exports = { connectWifi };
