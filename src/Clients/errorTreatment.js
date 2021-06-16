@@ -22,6 +22,7 @@ const requestEmission = async () => {
         if (!status) { return; }
         io.emit('wifiStatus', true);
         reconnect();
+        // socket.off('renewController');
       });
     },
   );
@@ -32,11 +33,11 @@ const unknownError = (err) => {
 };
 
 safeEject.on('error', async (err) => {
-  console.log('errou');
-  const jsonError = JSON.parse(JSON.stringify(err));
-  if (!(errorDictionary.includes(jsonError.code))) unknownError(jsonError);
+  // console.log('errou', err);
+  // const jsonError = JSON.parse(JSON.stringify(err));
+  // if (!(errorDictionary.includes(jsonError.code))) unknownError(jsonError);
   io.emit('wifiStatus', false);
-  await requestEmission();
+  requestEmission();
 });
 
 module.exports = { safeEject };
