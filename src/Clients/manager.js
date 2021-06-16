@@ -11,18 +11,16 @@ let clientData;
 let wifiData;
 
 const standByDataPort = new net.Socket()
+
 const reconnect = () => {
-  !(!!standByDataPort) ? 
-  ((standByDataPort = new net.Socket()) && reconnect()
-  ) : (
   safeEject.run(() => {
-    console.log('tentando conectar')
+  if(!standByDataPort){ console.log('a'); standByDataPort = new net.Socket() ; reconnect() }
+  console.log(standByDataPort)
     standByDataPort.connect(888, '192.168.5.1', () => {
       io.emit('wifiStatus', true)
       standByDataPort.on('error', (err) => {throw err;})
     })  
   })
-  )
 }
 
 
