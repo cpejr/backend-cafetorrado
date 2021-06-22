@@ -11,18 +11,20 @@ let clientData;
 let wifiData;
 
 let standByDataPort = new net.Socket()
-let tried = 0;
+let done = false;
 const reconnect = () => {
-  safeEject.run(() => {
-    console.log(tried)
-    tried++
-  if(!standByDataPort){ standByDataPort = new net.Socket() ; reconnect() }
-    console.log('Reconectando...')
-    standByDataPort.connect(888, '192.168.5.1', () => {
-      console.log('Conectado')
-      io.emit('wifiStatus', true)
-      standByDataPort.on('error', (err) => {throw err;})
-    })  
+  safeEject.run(
+    () => {
+      if(!done){done = true; setTimeout(()=> {done = false}, 1000); return}
+      if(!(!!standByDataPort)){ standByDataPort = new net.Socket() ; reconnect() }
+      console.log('Reconectando...')
+      setTimeout(()=>{
+        standByDataPort.connect(888, '192.168.5.1', () => {
+        console.log('Conectado')
+        io.emit('wifiStatus', true)
+        standByDataPort.on('error', (err) => {throw err;})
+      })  
+    }, 2000)
   })
 }
 
@@ -104,8 +106,6 @@ async function writeNewWifi(req, res) {
   }
   return res.status(500).json({ Message: 'No connection established' });
 }
-let done = false;
-!done ? reconnect() : done = true;
 
 module.exports = {
   connectToWifi, disconnectWifi, connectToDataPort, disconnectData, writeNewWifi, clientData, clientWifi, reconnect
