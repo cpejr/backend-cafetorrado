@@ -1,55 +1,53 @@
 const net = require('net');
-const { connectWifi } = require('./client_internet');
+const { connectMachineParams, sendMachineParams } = require('./client_LUTs');
 const { connectData } = require('./client_data');
 const { wifiDataToBuffer } = require('../Structs/wifi_converter');
 const { io } = require('../Socket/Assets');
 const { safeEject } = require('./errorTreatment');
+const { client } = require('../database/connection');
 
-/*eslint-disable*/
-let clientWifi;
-let clientData;
-let wifiData;
+let clientWifi; let params; let clientData; let clientParam; let result; let wifiData;
 
-let standByDataPort = new net.Socket()
+let standByDataPort = new net.Socket();
 let done = false;
 const reconnect = () => {
   safeEject.run(
     () => {
-      if(!done){done = true; setTimeout(()=> {done = false}, 1000); return}
-      if(!(!!standByDataPort)){ standByDataPort = new net.Socket() ; reconnect() }
-      console.log('Reconectando...')
-      setTimeout(()=>{
+      if (!done) { done = true; setTimeout(() => { done = false; }, 1000); return; }
+      if (!standByDataPort) { standByDataPort = new net.Socket(); reconnect(); }
+      console.log('Reconectando...');
+      setTimeout(() => {
         standByDataPort.connect(888, '192.168.5.1', () => {
-        console.log('Conectado')
-        io.emit('wifiStatus', true)
-        standByDataPort.on('error', (err) => {throw err;})
-      })  
-    }, 2000)
-  })
-}
+          console.log('Conectado');
+          io.emit('wifiStatus', true);
+          standByDataPort.on('error', (err) => { throw err; });
+        });
+      }, 2000);
+    },
+  );
+};
 
-
-async function connectToWifi(req, res) {
-  if(standByDataPort) { standByDataPort.destroy(); (standByDataPort = null) }
-  if (!clientWifi && !clientData ) {
+async function connectToParameters(req, res) {
+  if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
+  if (!clientWifi) {
     try {
-      [clientWifi, wifiData] = await connectWifi()
-      return res.status(200).json({ Message: 'Connection to Wifi configuration PORT estabilished', wifiData });
+      params = await connectMachineParams();
+      return res.status(200).json({ Message: 'Connection to Parameters configuration PORT estabilished', params });
     } catch (error) {
-      return res.status(500).json({ Message: 'Connection to Wifi configuration PORT failed' });
+      console.error(error);
+      return res.status(500).json({ Message: 'Connection to Parameters configuration PORT failed' });
     }
   } else {
     return res.status(201).json({ Message: 'Connection already estabilished with one of the ports', wifiData });
   }
 }
 
-async function disconnectWifi(req, res) {
-  if(standByDataPort) { standByDataPort.destroy(); (standByDataPort = null) }
+async function disconnectParameters(req, res) {
+  if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
   if (clientWifi && !clientData) {
     try {
       await clientWifi.destroy();
       clientWifi = null;
-      reconnect()
       return res.status(200).json({ Message: 'Connection to Wifi configuration PORT terminated' });
     } catch (error) {
       return res.status(500).json({ Message: 'Connection to Wifi configuration PORT termination failed' });
@@ -59,7 +57,7 @@ async function disconnectWifi(req, res) {
 }
 
 async function connectToDataPort(req, res) {
-  if(standByDataPort) { standByDataPort.destroy(); (standByDataPort = null) }
+  if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
   if (!clientWifi) {
     try {
       clientData = await connectData();
@@ -73,7 +71,7 @@ async function connectToDataPort(req, res) {
 }
 
 function disconnectData(req, res) {
-  if(standByDataPort) { standByDataPort.destroy(); (standByDataPort = null) }
+  if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
   if (clientData) {
     return new Promise((resolve, reject) => {
       try {
@@ -85,13 +83,13 @@ function disconnectData(req, res) {
       } catch (error) {
         reject(res.status(500).json({ Message: 'Connection to data PORT termination failed' }));
       }
-    })
+    });
   }
   return res.status(201).json({ Message: 'There was no connection to data PORT' });
 }
 
 async function writeNewWifi(req, res) {
-  if(standByDataPort) { standByDataPort.destroy(); (standByDataPort = null) }
+  if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
   if (clientWifi && !clientData) {
     try {
       const { wifiName, password, hidden } = req.body;
@@ -107,6 +105,17 @@ async function writeNewWifi(req, res) {
   return res.status(500).json({ Message: 'No connection established' });
 }
 
+async function sendNewParameters() {
+  // if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
+  try {
+    const res = await sendMachineParams();
+    return res;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
 module.exports = {
-  connectToWifi, disconnectWifi, connectToDataPort, disconnectData, writeNewWifi, clientData, clientWifi, reconnect
+  connectToParameters, disconnectParameters, connectToDataPort, disconnectData, writeNewWifi, clientData, clientWifi, reconnect, sendNewParameters,
 };
