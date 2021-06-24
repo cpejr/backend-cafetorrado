@@ -4,8 +4,6 @@ const {
   connectToWifi, disconnectWifi, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
 
-const wifiObs = require('./wifiObserver');
-
 const routes = express.Router();
 // Server side
 routes.get('/', RoastController.get);
