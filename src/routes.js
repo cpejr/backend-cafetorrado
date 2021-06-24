@@ -1,7 +1,7 @@
 const express = require('express');
 const RoastController = require('./Controllers/RoastController');
 const {
-  connectToWifi, disconnectWifi, connectToDataPort, disconnectData, writeNewWifi,
+  connectToParameters, disconnectParameters, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
 
 const routes = express.Router();
@@ -13,13 +13,15 @@ routes.delete('/deleteLastRoast', RoastController.deleteLast);
 
 routes.post('/setChartParams', RoastController.create);
 routes.post('/changeWifi', writeNewWifi);
-routes.post('/sendData', RoastController.bounceToUpdate);
+routes.post('/sendData', RoastController.bounceToData);
+routes.post('/setMachineParameters', RoastController.bounceToParameters);
+routes.post('/sendMachineParameters', RoastController.sendParameters);
 
 // socket side
-routes.get('/connectWifi', connectToWifi);
-routes.get('/disconnectWifi', disconnectWifi);
 
 routes.get('/connectData', connectToDataPort);
 routes.get('/disconnectData', disconnectData);
+
+routes.get('/connectParameters', connectToParameters);
 
 module.exports = routes;

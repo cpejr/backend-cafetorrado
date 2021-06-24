@@ -1,6 +1,8 @@
 const fs = require('fs');
 const roastModel = require('../Models/RoastModel');
 const { update_vin_t } = require('../Structs/send_vin_t');
+const { update_par_t } = require('../Structs/send_par_t');
+const { sendNewParameters } = require('../Clients/manager');
 
 module.exports = {
   async create(req, res) {
@@ -45,13 +47,29 @@ module.exports = {
       return res.status(500).json({ Message: 'ERRO', err });
     }
   },
-  async bounceToUpdate(req, res) {
+  async bounceToData(req, res) {
     try {
       update_vin_t(req.body);
-      return res.status(200).json({ Message: 'Sucessfully changed params' });
+      return res.status(200).json({ Message: 'Sucessfully changed data' });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ Message: 'There has been an error on the update' });
+    }
+  },
+  async bounceToParameters(req, res) {
+    try {
+      const struct = update_par_t(req.body);
+      return res.status(200).json({ Message: 'Sucessfully changed parameters of LUTs', struct });
+    } catch (err) {
+      return res.status(500).json({ Message: 'There has been an error on the update' });
+    }
+  },
+  async sendParameters(req, res) {
+    try {
+      const result = await sendNewParameters();
+      return res.status(200).json({ Message: 'Sucessfully sent parameters of LUTs', result });
+    } catch (err) {
+      return res.status(500).json({ Message: 'There has been an error on the update of LUTs' });
     }
   },
 };
