@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
-const { unpack_daq_t } = require('../Structs/daq_t');
+const { unpack_memvar_t } = require('../Structs/memvar_t');
 const { io } = require('../Socket/Assets')
 const { performance } = require('perf_hooks')
 const { send_vin_t } = require('../Structs/send_vin_t');
@@ -36,7 +36,7 @@ async function connectData() {
       });
 
       client.on('data', (data) => {
-        const unpacked = unpack_daq_t(data);
+        const unpacked = unpack_memvar_t(data);
         const headers = {
           BlkBegVin: unpacked.get('BlkBegVin').toString(16),
           BlkEndVin: unpacked.get('BlkEndVin').toString(16),
@@ -46,13 +46,13 @@ async function connectData() {
         if(headers.BlkBegVin === 'aaaaaaaa' && headers.BlkEndVin === 'bbbbbbbb' &&
            headers.BlkBegVou === 'cccccccc' && headers.BlkEndVou === 'dddddddd') {
           io.emit('realData', unpacked);
-          console.log(unpacked.fields.MdlManInj)
-          console.log(unpacked.fields.MdlManCdr)
-          console.log(unpacked.fields.MdlManCar)
+          console.log(unpacked.fields.MdlModSts)
+          console.log(unpacked.fields.MdlManChr)
 
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), data, (err) => { if(err) throw err; })
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), separator + JSON.stringify(unpacked.fields), 'utf-8', (err) => { if(err) throw err; })  
           if(!separator) separator = ',\n';
+          console.log(send_vin_t())
           client.write(send_vin_t())
         }
         

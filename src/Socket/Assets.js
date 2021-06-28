@@ -7,11 +7,9 @@ const io = require('socket.io')(9000, {
 });
 
 async function treatSocketError() {
-  // if (!exceptionStatus()) return;
   const status = await checkWifiConnection();
   if (!status) { io.emit('notConnected'); return; }
   io.emit('wifiStatus', true);
-  // reconnect();
 }
 
 const socket = { connection: null };

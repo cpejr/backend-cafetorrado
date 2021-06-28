@@ -6,11 +6,13 @@ const { create_vin_t } = require('./vin_t');
 const vin_t = create_vin_t();
 
 function update_vin_t(data) {
+  console.log(data);
   const {
     MdlManChr, MdlManInj,
     MdlManCdr, MdlManCar,
     MdlExhAcv = 0, MdlMisAcv = 0,
     MdlIgnAcv = 0, MdlAlmAcv = 0,
+    MdlModReq,
   } = data;
 
   vin_t.fields.MdlManChr = MdlManChr ?? vin_t.fields.MdlManChr;
@@ -21,6 +23,7 @@ function update_vin_t(data) {
   vin_t.fields.MdlMisAcv = !!MdlMisAcv;
   vin_t.fields.MdlIgnAcv = !!MdlIgnAcv;
   vin_t.fields.MdlAlmAcv = !!MdlAlmAcv;
+  vin_t.fields.MdlModReq = MdlModReq ?? vin_t.fields.MdlManCar;
 }
 
 function send_vin_t() {

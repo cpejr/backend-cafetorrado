@@ -4,7 +4,7 @@ const ADC_CMAX = 3;
 const TMP_CMAX = 2;
 const INV_CMAX = 2;
 
-function unpack_daq_t(buffer) {
+function unpack_memvar_t(buffer) {
   const serverData = new Struct()
     .word32Ule('BlkBegVin')
     .floatle('MdlManChr')
@@ -84,4 +84,4 @@ function unpack_daq_t(buffer) {
   return serverData;
 }
 
-module.exports = { unpack_daq_t };
+module.exports = { unpack_memvar_t };

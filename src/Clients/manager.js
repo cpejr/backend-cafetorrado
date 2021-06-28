@@ -70,20 +70,17 @@ async function connectToDataPort(req, res) {
   }
 }
 
-function disconnectData(req, res) {
+async function disconnectData(req, res) {
   if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
   if (clientData) {
-    return new Promise((resolve, reject) => {
-      try {
-        clientData.destroy().then(() => {
-          clientData = null;
-          reconnect();
-          resolve(res.status(200).json({ Message: 'Connection to data PORT terminated' }));
-        });
-      } catch (error) {
-        reject(res.status(500).json({ Message: 'Connection to data PORT termination failed' }));
-      }
-    });
+    try {
+      await clientData.destroy();
+      await (clientData = null);
+      return res.status(200).json({ Message: 'Connection to data PORT terminated' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ Message: 'Connection to data PORT termination failed' });
+    }
   }
   return res.status(201).json({ Message: 'There was no connection to data PORT' });
 }
