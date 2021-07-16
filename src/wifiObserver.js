@@ -25,16 +25,11 @@ const checkWifiConnection = () => new Promise((resolve) => {
 
   safeEject.run(
     async () => {
-      console.log('chegou aqui');
       const currentName = await getWifiName();
       const status = await checker(currentName);
       resolve(status);
     },
   );
-});
-
-io.on('newPassword', (newName) => {
-  setWifiName(newName);
 });
 
 module.exports = { checkWifiConnection };
