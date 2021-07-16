@@ -10,19 +10,18 @@ function update_vin_t(data) {
   const {
     MdlManChr, MdlManInj,
     MdlManCdr, MdlManCar,
-    MdlExhAcv = 0, MdlMisAcv = 0,
-    MdlIgnAcv = 0, MdlAlmAcv = 0,
+    MdlExhAcv, MdlMisAcv,
+    MdlIgnAcv, MdlAlmAcv,
     MdlModReq,
   } = data;
-
   vin_t.fields.MdlManChr = MdlManChr ?? vin_t.fields.MdlManChr;
   vin_t.fields.MdlManInj = MdlManInj ?? vin_t.fields.MdlManInj;
   vin_t.fields.MdlManCdr = MdlManCdr ?? vin_t.fields.MdlManCdr;
   vin_t.fields.MdlManCar = MdlManCar ?? vin_t.fields.MdlManCar;
-  vin_t.fields.MdlExhAcv = !!MdlExhAcv;
-  vin_t.fields.MdlMisAcv = !!MdlMisAcv;
-  vin_t.fields.MdlIgnAcv = !!MdlIgnAcv;
-  vin_t.fields.MdlAlmAcv = !!MdlAlmAcv;
+  vin_t.fields.MdlExhAcv = MdlExhAcv ?? vin_t.fields.MdlExhAcv;
+  vin_t.fields.MdlMisAcv = MdlMisAcv ?? vin_t.fields.MdlMisAcv;
+  vin_t.fields.MdlIgnAcv = MdlIgnAcv ?? vin_t.fields.MdlIgnAcv;
+  vin_t.fields.MdlAlmAcv = MdlAlmAcv ?? vin_t.fields.MdlAlmAcv;
   vin_t.fields.MdlModReq = MdlModReq ?? vin_t.fields.MdlManCar;
 }
 
