@@ -9,7 +9,7 @@ module.exports = {
 
   async update(lastTheme) {
     const result = await connection('themes')
-      .update({ lastTheme }).first();
+      .where({ theme_id: 1 }).update(lastTheme);
     return result;
   },
 };

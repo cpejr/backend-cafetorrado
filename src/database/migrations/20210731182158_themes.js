@@ -1,6 +1,6 @@
 exports.up = function (knex) {
   return knex.schema.createTable('themes', (table) => {
-    table.string('theme_id').primary().notNullable();
+    table.integer('theme_id').primary().notNullable();
     table.string('lastTheme');
   });
 };

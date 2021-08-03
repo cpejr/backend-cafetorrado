@@ -17,7 +17,7 @@ module.exports = {
 
   async updateLastTheme(req, res) {
     try {
-      const { themeName } = req.body;
+      const themeName = req.body;
       const result = await ThemeModel.update(themeName);
       return res.status(200).json(result);
     } catch (err) {
