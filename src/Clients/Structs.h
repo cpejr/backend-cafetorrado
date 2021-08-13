@@ -27,8 +27,8 @@ typedef enum
 	Sts_Wul  =  3U,
 	Sts_Chr  =  4U,
 	Sts_Uds  =  5U,
-	Sts_Run  =  7U,
-	Sts_Sdw  =  8U
+	Sts_Run  =  6U,
+	Sts_Sdw  =  7U
 } PACKED mdlst_t;
 
 typedef enum
@@ -101,7 +101,7 @@ typedef struct
 	uint8_t     MdlMisAcv;
 	uint8_t     MdlIgnAcv;
 	uint8_t     MdlAlmAcv;
-	mdlst_t     MdlModReq;
+	mdlst_t     MdlModReq; // 000000124545    05 0000
 	uint8_t     VinEndRes_0;
 	uint8_t     VinEndRes_1;
 	uint8_t     VinEndRes_2;
@@ -135,13 +135,13 @@ typedef struct
 	float       InvPrsScl;
 	float       InjPwmReq;
 	float       MdlGraLin;
-    float       MdlGraScl;
+  float       MdlGraScl;
 	float       MdlAirLin;
 	float       MdlAirScl;
-    float       MdlRorPrv;
-    float       MdlRorCur;
-    float       MdlRorVal;
-    float       MdlDisErr;
+  float       MdlRorPrv;
+  float       MdlRorCur;
+  float       MdlRorVal;
+  float       MdlDisErr;
 	float       MdlInjOut;
 	float       MdlDruOut;
 	float       MdlAirOut;
@@ -177,9 +177,9 @@ typedef struct
 
 typedef struct
 {
-	blk_t       BlkBegVou;
+	blk_t       BlkBegVou; // 0xAAAAAAAA
 	vob_t       PkgBlkVou;
-	blk_t       BlkEndVou;
+	blk_t       BlkEndVou; // 0xBBBBBBBB
 } vou_t;
 
 typedef struct
@@ -202,11 +202,66 @@ typedef struct
 } lut2D_t;
 
 typedef struct
+/*
+	p1 -> (tempo, temperatura) (x, y)
+	p2 // 
+	p3 //
+	p4 //
+
+	p1 -> ponto de inflexão, é onde o ROR cruza o valor 0 //Utilizar annotation no gráfico
+		|-> MdlModSts vai mudar de undershoot (5 -> 6) Precisa ser travado 
+		|-> Apenas a temperatura importa(APENAS NO P1)
+		|-> Considerar apenas o eixo Y
+		|-> O parâmetro a ser alterado é a temperatura que a máquina estava 
+		|-> lut1D_t     MdlWupChr;
+		|-> Eixo X: quantidad de café, massa(gramas)
+		|-> Eixo Y: Temperatura de warmup 
+		eixo x => [100, 500, 1000, 1500 ,2000]
+		eixo y => [100, 120, 140, 160, 180]
+
+		|-> Temperatura de condicionamento, antes do café entrar na máquina(parãmetro para o delta)
+		155 -> 75 -> 60
+
+		140 -> 75 -> 60  
+		
+		Delta => Diferença entre a temperatura esperada(75) e medida(60)
+		No epicentro => 15 (100)
+		No adjacentes(n-1) => 15*(3/4)
+		No adjacentes(n-2) => 15*(2/4)
+
+		135 
+
+*/
+
+/*
+
+	P2 -> (tempo, temperatura) (4'30", 150o)
+	lut2D_t     MdlRunCin
+	eixo x -> temperatura do grão
+	eixo y -> massa inserida na máuina em grãos => Seta no início da torra 
+	1000g 
+
+	4'30" - 150o 
+	4'30" - 140o       ? => Qual foi a temperatura  
+
+	Delta se baseia na diferença de temperatura do ponto analisado 
+
+	A cada 1o de erro, 1% de chama de correção 
+
+	4'30" - 10o de erro - tinha 140 graus 
+
+	EPICENTRO->Ponto mais próximo de 1000g(grama do usuário) e 140o(o ponto de medição da torra executada)
+
+	
+	Código deve ser feito com pesos 
+
+*/
+
 {
-	lut1D_t     MdlWupChr;
+	lut1D_t     MdlWupChr;// P1 Possibilidade de alterar apenas na vertical 
 	lut1D_t     MdlRunCdr;
 	lut1D_t     MdlRunCar;
-	lut2D_t     MdlRunCin;
+	lut2D_t     MdlRunCin;// P2
 	lut2D_t     MdlCorAir;
 	float       AdcFacFil[ADC_CMAX];
 	float       BchFatFil;
@@ -232,7 +287,7 @@ typedef struct
 	float       MdlUdsHys;
 	float       MdlSdwCdr;
 	float       MdlSdwCar;
-	float		MdlSdwLim;
+	float				MdlSdwLim;
 	float       MdlDruMin;
 	float       MdlDruMax;
 	float       MdlAirMin;
