@@ -35,6 +35,14 @@ module.exports = {
     return res.status(200).json({ message: 'Roast sucessfully Deleted' });
   },
 
+  async deleteSpecific(req, res) {
+    // eslint-disable-next-line
+    const { roast_id } = req.params;
+    // eslint-disable-next-line
+    fs.rmdir(`src/RoastArchive/${roast_id}`, { recursive: true }, (err) => { if (err) throw err; });
+    return res.status(200).json({ message: 'Roast sucessfully Deleted' });
+  },
+
   async getUniqueRoastData(req, res) {
     try {
       // eslint-disable-next-line
