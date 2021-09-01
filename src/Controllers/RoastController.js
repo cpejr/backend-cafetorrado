@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const fs = require('fs');
 const roastModel = require('../Models/RoastModel');
 const { update_vin_t } = require('../Structs/send_vin_t');
@@ -36,11 +37,17 @@ module.exports = {
   },
 
   async deleteSpecific(req, res) {
-    // eslint-disable-next-line
-    const { roast_id } = req.params;
-    // eslint-disable-next-line
-    fs.rmdir(`src/RoastArchive/${roast_id}`, { recursive: true }, (err) => { if (err) throw err; });
-    return res.status(200).json({ message: 'Roast sucessfully Deleted' });
+    try {
+      const { roast_id } = request.params;
+      fs.rmdir(`src/RoastArchive/${roast_id}`, { recursive: true }, (err) => { if (err) throw err; });
+      const result = await RoastModel.deleteById(roast_id);
+      return response.status(200).json(result);
+    } catch (err) {
+      console.log(`Roast delete failed: ${err}`);
+      return response.status(500).json({
+        notification: 'Internal server error while trying to delete Roast',
+      });
+    }
   },
 
   async getUniqueRoastData(req, res) {
@@ -55,6 +62,7 @@ module.exports = {
       return res.status(500).json({ Message: 'ERRO', err });
     }
   },
+
   async bounceToData(req, res) {
     try {
       update_vin_t(req.body);
