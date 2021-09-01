@@ -1,5 +1,7 @@
+/* eslint-disable no-undef */
 /* eslint-disable camelcase */
 const fs = require('fs');
+const { request } = require('https');
 const roastModel = require('../Models/RoastModel');
 const { update_vin_t } = require('../Structs/send_vin_t');
 const { update_par_t } = require('../Structs/send_par_t');
@@ -38,13 +40,13 @@ module.exports = {
 
   async deleteSpecific(req, res) {
     try {
-      const { roast_id } = request.params;
+      const { roast_id } = req.params;
       fs.rmdir(`src/RoastArchive/${roast_id}`, { recursive: true }, (err) => { if (err) throw err; });
-      const result = await RoastModel.deleteById(roast_id);
-      return response.status(200).json(result);
+      const result = await roastModel.deleteById(roast_id);
+      return res.status(200).json(result);
     } catch (err) {
       console.log(`Roast delete failed: ${err}`);
-      return response.status(500).json({
+      return res.status(500).json({
         notification: 'Internal server error while trying to delete Roast',
       });
     }
