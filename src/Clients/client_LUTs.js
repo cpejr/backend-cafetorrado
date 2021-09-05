@@ -35,7 +35,7 @@ async function connectMachineParams() {
   }));
 }
 
-async function sendMachineParams() {
+async function sendMachineParams(BUFFERLut = Buffer(2048)) {
   let client = new net.Socket();
   safeEject.run(() => new Promise((resolve, reject) => {
     try {
@@ -45,7 +45,7 @@ async function sendMachineParams() {
           console.log('Wifi configuration connection closed');
         });
         console.log(send_par_t());
-        await client.write(send_par_t());
+        await client.write(BUFFERLut);// BUFFERLut ou send_par_t()?
         await client.destroy();
         await (client = null);
         resolve([client]);

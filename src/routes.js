@@ -3,6 +3,7 @@ const RoastController = require('./Controllers/RoastController');
 const {
   connectToParameters, disconnectParameters, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
+const { send_static_par_t } = require('./Structs/send_par_t');
 
 const routes = express.Router();
 // Server side
@@ -17,9 +18,14 @@ routes.post('/changeWifi', writeNewWifi);
 routes.post('/sendData', RoastController.bounceToData);
 routes.post('/setMachineParameters', RoastController.bounceToParameters);
 routes.post('/sendMachineParameters', RoastController.sendParameters);
+routes.post('/sendStaticLUTs', (req, res) => {
+  {roast_id} = req
+  const PARDATA = fs.readFileSync('\src\RoastArchive\:roast_id\DataStructs', '')
+  if(err) return res.json(err)
+  send_static_par_t(PARDATA)
+})
 
 // socket side
-
 routes.get('/connectData', connectToDataPort);
 routes.get('/disconnectData', disconnectData);
 
