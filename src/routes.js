@@ -1,4 +1,7 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const express = require('express');
+const fs = require('fs');
 const RoastController = require('./Controllers/RoastController');
 const {
   connectToParameters, disconnectParameters, connectToDataPort, disconnectData, writeNewWifi,
@@ -18,12 +21,7 @@ routes.post('/changeWifi', writeNewWifi);
 routes.post('/sendData', RoastController.bounceToData);
 routes.post('/setMachineParameters', RoastController.bounceToParameters);
 routes.post('/sendMachineParameters', RoastController.sendParameters);
-routes.post('/sendStaticLUTs', (req, res) => {
-  {roast_id} = req
-  const PARDATA = fs.readFileSync('\src\RoastArchive\:roast_id\DataStructs', '')
-  if(err) return res.json(err)
-  send_static_par_t(PARDATA)
-})
+routes.post('/sendStaticLUTs', RoastController.sendStaticParameters);
 
 // socket side
 routes.get('/connectData', connectToDataPort);

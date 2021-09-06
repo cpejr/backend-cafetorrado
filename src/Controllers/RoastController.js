@@ -6,6 +6,7 @@ const roastModel = require('../Models/RoastModel');
 const { update_vin_t } = require('../Structs/send_vin_t');
 const { update_par_t } = require('../Structs/send_par_t');
 const { sendNewParameters } = require('../Clients/manager');
+const { sendStaticParams } = require('../Clients/client_LUTs');
 
 module.exports = {
   async create(req, res) {
@@ -88,6 +89,17 @@ module.exports = {
       return res.status(200).json({ Message: 'Sucessfully sent parameters of LUTs', result });
     } catch (err) {
       return res.status(500).json({ Message: 'There has been an error on the update of LUTs' });
+    }
+  },
+
+  async sendStaticParameters(req, res) {
+    const roast_id = req;
+    try {
+      const PARDATA = fs.readFileSync(`/src/RoastArchive/${roast_id}/DataStructs`, '');
+      sendStaticParams(PARDATA);
+      return res.status(200).json({ Message: 'Sucessfully sent parameters of LUTs' });
+    } catch (error) {
+      return res.status(500).json({ Message: 'There has been an error on sending LUTs' });
     }
   },
 };
