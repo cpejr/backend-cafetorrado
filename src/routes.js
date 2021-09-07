@@ -21,7 +21,7 @@ routes.post('/changeWifi', writeNewWifi);
 routes.post('/sendData', RoastController.bounceToData);
 routes.post('/setMachineParameters', RoastController.bounceToParameters);
 routes.post('/sendMachineParameters', RoastController.sendParameters);
-routes.post('/sendStaticLUTs', RoastController.sendStaticParameters);
+routes.post('/sendStaticLUTs/:roast_id', RoastController.sendStaticParameters);
 
 // socket side
 routes.get('/connectData', connectToDataPort);
