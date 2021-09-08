@@ -10,6 +10,6 @@
   },
   "rules": {
     "linebreak-style": 0,
-    "camelcase": [2, {"properties": "never"}]
+    "camelcase": 0
   }
 }
