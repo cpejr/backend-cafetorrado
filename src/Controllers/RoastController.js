@@ -93,13 +93,19 @@ module.exports = {
   },
 
   async sendStaticParameters(req, res) {
-    const roast_id = req;
     try {
-      const PARDATA = fs.readFileSync(`/src/RoastArchive/${roast_id}/DataStructs`, '');
+      const { roast_id } = req.params;
+      const PARDATA = fs.readFile(`/src/RoastArchive/${roast_id}/DataStructs`, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+      console.log('chegou');
       sendStaticParams(PARDATA);
       return res.status(200).json({ Message: 'Sucessfully sent parameters of LUTs' });
     } catch (error) {
-      return res.status(500).json({ Message: 'There has been an error on sending LUTs' });
+      console.log(req.params);
+      return res.status(500).json({ Message: req.params });
     }
   },
 };

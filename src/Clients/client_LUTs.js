@@ -56,7 +56,7 @@ async function sendMachineParams() {
   }));
 }
 
-async function sendStaticParams(BUFFERLut = Buffer(2048)) {
+async function sendStaticParams(BUFFERLut = Buffer.alloc(2048)) {
   let client = new net.Socket();
   safeEject.run(() => new Promise((resolve, reject) => {
     try {
@@ -65,8 +65,7 @@ async function sendStaticParams(BUFFERLut = Buffer(2048)) {
         client.on('close', () => {
           console.log('Wifi configuration connection closed');
         });
-        console.log(send_par_t());
-        await client.write(BUFFERLut);// BUFFERLut ou send_par_t()?
+        await client.write(BUFFERLut);
         await client.destroy();
         await (client = null);
         resolve([client]);
