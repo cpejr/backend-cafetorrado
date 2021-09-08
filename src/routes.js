@@ -1,8 +1,7 @@
 const express = require('express');
 const RoastController = require('./Controllers/RoastController');
 const {
-  // eslint-disable-next-line no-unused-vars
-  connectToParameters, disconnectParameters, connectToDataPort, disconnectData, writeNewWifi,
+  connectToParameters, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
 const ThemeController = require('./Controllers/ThemeController');
 
