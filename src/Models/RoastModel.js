@@ -23,6 +23,13 @@ module.exports = {
     return result;
   },
 
+  async deleteById(roast_id) {
+    const result = await connection('roast')
+      .where({ roast_id })
+      .delete();
+    return result;
+  },
+
   async createTxt(roast_id, txtRoast) {
     fs.appendFile((path.join(__dirname), 'buttonData.txt'), `${data},`, (err) => {
       if (err) throw err;

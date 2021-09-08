@@ -12,6 +12,7 @@ routes.get('/getUniqueRoastData/:roast_id', RoastController.getUniqueRoastData);
 routes.get('/getLastTheme', ThemeController.get);
 
 routes.delete('/deleteLastRoast', RoastController.deleteLast);
+routes.delete('/deleteSpecificRoast/:roast_id', RoastController.deleteSpecific);
 
 routes.post('/setChartParams', RoastController.create);
 routes.post('/changeWifi', writeNewWifi);

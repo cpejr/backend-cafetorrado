@@ -35,9 +35,22 @@ module.exports = {
     return res.status(200).json({ message: 'Roast sucessfully Deleted' });
   },
 
+  async deleteSpecific(req, res) {
+    try {
+      const { roast_id } = req.params;
+      fs.rmdir(`src/RoastArchive/${roast_id}`, { recursive: true }, (err) => { if (err) throw err; });
+      const result = await roastModel.deleteById(roast_id);
+      return res.status(200).json(result);
+    } catch (err) {
+      console.log(`Roast delete failed: ${err}`);
+      return res.status(500).json({
+        notification: 'Internal server error while trying to delete Roast',
+      });
+    }
+  },
+
   async getUniqueRoastData(req, res) {
     try {
-      // eslint-disable-next-line
       const { roast_id } = req.params;
       // eslint-disable-next-line
       const data = require(`../RoastArchive/${roast_id}/ParsedData.json`);
@@ -47,6 +60,7 @@ module.exports = {
       return res.status(500).json({ Message: 'ERRO', err });
     }
   },
+
   async bounceToData(req, res) {
     try {
       update_vin_t(req.body);
