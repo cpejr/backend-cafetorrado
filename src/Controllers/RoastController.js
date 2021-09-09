@@ -7,6 +7,19 @@ const { update_vin_t } = require('../Structs/send_vin_t');
 const { update_par_t } = require('../Structs/send_par_t');
 const { sendNewParameters } = require('../Clients/manager');
 const { sendStaticParams } = require('../Clients/client_LUTs');
+const { create_par_t } = require('../Structs/par_t');
+const { connectMachineParams } = require('../Clients/client_LUTs');
+/*
+Pra testar, eu to fazendo o seguinte, criei um arquivo par_t baseado nos parametros que a gente tem
+coloquei os header e alterei um valor dentro de uma das lookuptables, daí quando chama a rota criada
+eu escrevo no arquivo a LUT que eu criei na mão, leio de dentro desse arquivo e jogo dentro da
+maquina o valor lido.
+*/
+const par_t = create_par_t(Buffer(2548));
+par_t.fields.BlkBegPar = 0xeeeeeeee;
+par_t.fields.BlkEndPar = 0xffffffff;
+// Altere aqui para mudar o valor que é enviado e recebido
+par_t.fields.MdlWupChr.Bkp_x[0] = 822;
 
 module.exports = {
   async create(req, res) {
@@ -94,15 +107,25 @@ module.exports = {
 
   async sendStaticParameters(req, res) {
     try {
-      const { roast_id } = req.params;
+      // const { roast_id } = req.params;
+      // Com o encoding descoberto é ajeitar pra logica que já haviamos discutido
       try {
-        const PARDATA = fs.readFileSync(`/src/RoastArchive/${roast_id}/DataStructs`, 'utf8');
-        sendStaticParams(PARDATA);
-        return res.status(200).json({ message: 'Parameters sent to esp' });
+        // Crio o arquivo teste com um buffer do tamanho correto com as validações necessárias
+        fs.writeFileSync('src/RoastArchive/testfile', par_t.buffer());
+        // leio desse arquivo que acabei de criar. O encoding é o padrão mesmo, então nem precisa
+        // colocar nada
+        const PARDATA = fs.readFileSync('src/RoastArchive/testfile');
+        // envio pra maquina o arquivo
+        await sendStaticParams(PARDATA);
+        // leio o dado e verifico se está corretp
+        const data = await connectMachineParams();
+        // ESTÁ. Grande dia
+        return res.status(200).json({ message: 'Parameters sent to esp, YES', DATA: data.fields.MdlWupChr.Bkp_x[0] });
+        // Averiguar com o Hnerique: QUando a porta 888 é aberta, enviado os dados e fechada,
+        // bloqueia o envio de mais dados. É preciso reiniciar o sistema. Bug?
       } catch (error) {
         return res.status(500).json({ error });
       }
-      return res.status(200).json({ Message: 'Sucessfully sent parameters of LUTs' });
     } catch (error) {
       console.log(req.params);
       return res.status(500).json({ Message: req.params });

@@ -8,7 +8,7 @@ const bufArr = [];
 
 async function connectMachineParams() {
   let client = new net.Socket();
-  safeEject.run(() => new Promise((resolve, reject) => {
+  return safeEject.run(() => new Promise((resolve, reject) => {
     try {
       client.connect(888, '192.168.5.1', () => {
         console.log('Client: LUT connection established with server');
@@ -22,9 +22,9 @@ async function connectMachineParams() {
           if (!asyncConnect) { asyncConnect += 1; return; }
           const buffer = Buffer.concat(bufArr);
           const unpacked = create_par_t(buffer);
-          console.log(unpacked.fields.MdlWupChr.Bkp_x[0]);
           await client.destroy();
           await (client = null);
+          asyncConnect = 0;
           resolve(unpacked);
         });
       });
@@ -37,7 +37,7 @@ async function connectMachineParams() {
 
 async function sendMachineParams() {
   let client = new net.Socket();
-  safeEject.run(() => new Promise((resolve, reject) => {
+  return safeEject.run(() => new Promise((resolve, reject) => {
     try {
       client.connect(888, '192.168.5.1', async () => {
         console.log('Client: LUT connection established with server');
@@ -58,7 +58,7 @@ async function sendMachineParams() {
 
 async function sendStaticParams(BUFFERLut = Buffer.alloc(2548)) {
   let client = new net.Socket();
-  safeEject.run(() => new Promise((resolve, reject) => {
+  return safeEject.run(() => new Promise((resolve, reject) => {
     try {
       client.connect(888, '192.168.5.1', async () => {
         console.log('Client: LUT connection established with server');
