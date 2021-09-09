@@ -56,7 +56,7 @@ async function sendMachineParams() {
   }));
 }
 
-async function sendStaticParams(BUFFERLut = Buffer.alloc(2048)) {
+async function sendStaticParams(BUFFERLut = Buffer.alloc(2548)) {
   let client = new net.Socket();
   safeEject.run(() => new Promise((resolve, reject) => {
     try {
