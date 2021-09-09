@@ -95,13 +95,13 @@ module.exports = {
   async sendStaticParameters(req, res) {
     try {
       const { roast_id } = req.params;
-      const PARDATA = fs.readFile(`/src/RoastArchive/${roast_id}/DataStructs`, 'utf8', (err, data) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-      console.log('chegou');
-      sendStaticParams(PARDATA);
+      try {
+        const PARDATA = fs.readFileSync(`/src/RoastArchive/${roast_id}/DataStructs`, 'utf8');
+        sendStaticParams(PARDATA);
+        return res.status(200).json({ message: 'Parameters sent to esp' });
+      } catch (error) {
+        return res.status(500).json({ error });
+      }
       return res.status(200).json({ Message: 'Sucessfully sent parameters of LUTs' });
     } catch (error) {
       console.log(req.params);

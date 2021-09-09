@@ -65,6 +65,7 @@ async function sendStaticParams(BUFFERLut = Buffer.alloc(2048)) {
         client.on('close', () => {
           console.log('Wifi configuration connection closed');
         });
+
         await client.write(BUFFERLut);
         await client.destroy();
         await (client = null);
