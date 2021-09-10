@@ -10,6 +10,6 @@
   },
   "rules": {
     "linebreak-style": 0,
-    "camelcase": 0,
+    "camelcase": 0
   }
 }
