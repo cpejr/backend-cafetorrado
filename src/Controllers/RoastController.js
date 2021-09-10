@@ -1,7 +1,4 @@
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 const fs = require('fs');
-const { request } = require('https');
 const roastModel = require('../Models/RoastModel');
 const { update_vin_t } = require('../Structs/send_vin_t');
 const { update_par_t } = require('../Structs/send_par_t');
@@ -68,7 +65,6 @@ module.exports = {
 
   async getUniqueRoastData(req, res) {
     try {
-      // eslint-disable-next-line
       const { roast_id } = req.params;
       // eslint-disable-next-line
       const data = require(`../RoastArchive/${roast_id}/ParsedData.json`);
@@ -119,7 +115,6 @@ module.exports = {
         await sendStaticParams(PARDATA);
         // leio o dado e verifico se está corretp
         const data = await connectMachineParams();
-        // ESTÁ. Grande dia
         return res.status(200).json({ message: 'Parameters sent to esp, YES', DATA: data.fields.MdlWupChr.Bkp_x[0] });
         // Averiguar com o Hnerique: QUando a porta 888 é aberta, enviado os dados e fechada,
         // bloqueia o envio de mais dados. É preciso reiniciar o sistema. Bug?
