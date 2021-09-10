@@ -1,12 +1,8 @@
-/* eslint-disable no-undef */
-/* eslint-disable camelcase */
 const express = require('express');
-const fs = require('fs');
 const RoastController = require('./Controllers/RoastController');
 const {
-  connectToParameters, disconnectParameters, connectToDataPort, disconnectData, writeNewWifi,
+  connectToParameters, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
-const { send_static_par_t } = require('./Structs/send_par_t');
 
 const routes = express.Router();
 // Server side
