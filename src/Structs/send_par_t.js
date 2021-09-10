@@ -3,6 +3,7 @@ const { create_par_t } = require('./par_t');
 const par_t = create_par_t(Buffer(2548));
 par_t.fields.BlkBegPar = 0xeeeeeeee;
 par_t.fields.BlkEndPar = 0xffffffff;
+
 const update_par_t = (newParameters) => {
   par_t.fields.MdlWupChr.Bkp_x[0] = 0xffff;
   return par_t.fields;
