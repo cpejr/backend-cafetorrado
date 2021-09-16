@@ -1,3 +1,4 @@
+/* eslint-disable */
 const MarkModel = require('../Models/MarkModel');
 
 module.exports = {
@@ -8,9 +9,10 @@ module.exports = {
           const result = await MarkModel.create(Mark, roast_id);
           return res.status(200).json(result);
         } catch (err) {
-          console.warn(`There has been an error on the creation of the roast:\n${err}`);
+          console.warn(`There has been an error while saving the mark name:\n${err}`);
           return res.status(500).json({
             error: 'Failed to create Roast',
           });
         }
-      },
+    },
+};
