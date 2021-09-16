@@ -1,9 +1,8 @@
 exports.up = function (knex) {
   return knex.schema.createTable('mark', (table) => {
-    table.string('mark1').primary().notNullable();
-    table.string('mark2').primary().notNullable();
-    table.string('mark3').primary().notNullable();
-    table.string('mark4').primary().notNullable();
+    table.string('mark_id').primary().notNullable();
+    table.string('roast_id').primary().notNullable();
+    table.string('mark_name').notNullable();
   });
 };
 

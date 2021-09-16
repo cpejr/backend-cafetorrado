@@ -1,0 +1,16 @@
+const MarkModel = require('../Models/MarkModel');
+
+module.exports = {
+    async create(req, res) {
+        try {
+        const Mark = req.body;
+          const { roast_id } = req.params;
+          const result = await MarkModel.create(Mark, roast_id);
+          return res.status(200).json(result);
+        } catch (err) {
+          console.warn(`There has been an error on the creation of the roast:\n${err}`);
+          return res.status(500).json({
+            error: 'Failed to create Roast',
+          });
+        }
+      },

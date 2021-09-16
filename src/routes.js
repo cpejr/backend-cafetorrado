@@ -1,5 +1,7 @@
 const express = require('express');
 const RoastController = require('./Controllers/RoastController');
+const MarkController = require('./Controllers/MarkController');
+
 const {
   connectToParameters, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
@@ -7,6 +9,8 @@ const ThemeController = require('./Controllers/ThemeController');
 
 const routes = express.Router();
 // Server side
+routes.create('/saveMark/:roast_id', MarkController.create);
+
 routes.get('/', RoastController.get);
 routes.get('/getUniqueRoastData/:roast_id', RoastController.getUniqueRoastData);
 routes.get('/getLastTheme', ThemeController.get);
