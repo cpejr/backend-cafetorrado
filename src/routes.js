@@ -1,9 +1,11 @@
+/* eslint-disable */
 const express = require('express');
 const RoastController = require('./Controllers/RoastController');
 const {
   connectToParameters, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
 const ThemeController = require('./Controllers/ThemeController');
+const { sendMachineParams } = require('./Clients/client_LUTs');
 
 const routes = express.Router();
 // Server side
@@ -20,6 +22,8 @@ routes.post('/sendData', RoastController.bounceToData);
 routes.post('/setMachineParameters', RoastController.bounceToParameters);
 routes.post('/sendMachineParameters', RoastController.sendParameters);
 routes.post('/sendStaticLUTs/:roast_id', RoastController.sendStaticParameters);
+
+// routes.post('/sendUploadFiles', ???);
 
 routes.put('/updateLastTheme', ThemeController.updateLastTheme);
 
