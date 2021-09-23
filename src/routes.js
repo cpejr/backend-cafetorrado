@@ -23,14 +23,11 @@ routes.post('/setMachineParameters', RoastController.bounceToParameters);
 routes.post('/sendMachineParameters', RoastController.sendParameters);
 routes.post('/sendStaticLUTs/:roast_id', RoastController.sendStaticParameters);
 
-// routes.post('/sendUploadFiles', ???);
-
 routes.put('/updateLastTheme', ThemeController.updateLastTheme);
 
 // socket side
 routes.get('/connectData', connectToDataPort);
 routes.get('/disconnectData', disconnectData);
-
 routes.get('/connectParameters', connectToParameters);
 
 module.exports = routes;
