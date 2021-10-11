@@ -75,9 +75,9 @@ function unpack_memvar_t(buffer) {
     .word8('MdlModPrv') // mdlst_t
     .word8('MdlModSts') // mdlst_t
     .word8('BchModSts') // bchst_t
-    .word8('VouEndRes_0')
-    .word8('VouEndRes_1')
-    .word8('VouEndRes_2')
+    // .word8('VouEndRes_0')
+    // .word8('VouEndRes_1')
+    // .word8('VouEndRes_2')
     .word32Ule('BlkEndVou');// blk_t
 
   serverData._setBuff(buffer);

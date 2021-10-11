@@ -1,60 +1,65 @@
-#define TCP_PDAT  555
-#define TCP_PPAR  888
+#define TCP_PDAT 555
+#define TCP_PPAR 888
 
-#define TCP_TQLE  24
+#define TCP_TQLE 24
 
 typedef enum
 {
+	//Variáveis para alterar em tempo real.
 	Vin_Beg = 0xAAAAAAAAU,
 	Vin_End = 0xBBBBBBBBU,
+
+	//Variáveis de monitoramento.
 	Vou_Beg = 0xCCCCCCCCU,
 	Vou_End = 0xDDDDDDDDU,
+
+	//Variáveis de configuração.
 	Par_Beg = 0xEEEEEEEEU,
 	Par_End = 0xFFFFFFFFU
-} blk_t;
+} blk_t; //32 Bits
 
-#define ADC_CMAX 3
-#define TMP_CMAX 2
-#define INV_CMAX 2
+#define ADC_CMAX 3U
+#define TMP_CMAX 2U
+#define INV_CMAX 2U
 #define L1D_SMAX 15U
 #define L2D_SMAX 15U
 
 typedef enum
 {
-	Sts_Off  =  0U,
-	Sts_Man  =  1U,
-	Sts_Wuh  =  2U,
-	Sts_Wul  =  3U,
-	Sts_Chr  =  4U,
-	Sts_Uds  =  5U,
-	Sts_Run  =  7U,
-	Sts_Sdw  =  8U
+	Sts_Off = 0U, //Maquina vai desligar "Não recomendado"
+	Sts_Man = 1U, //Maquina vai entrar em modo manual
+	Sts_Wuh = 2U, //Inicia a torra automática - WakeUp High
+	Sts_Wul = 3U, //WakeUp low
+	Sts_Chr = 4U, //Charge
+	Sts_Uds = 5U, //Undeshoot
+	Sts_Run = 6U, //Running
+	Sts_Sdw = 7U  //Maquina vai cortar a chama, aumentar o fluxo de ar, aumentar velocidade do tambor, aguardar a teperatura do grão ser adequada e desligar.
 } PACKED mdlst_t;
 
 typedef enum
 {
-	Inv_Ini   = 0U,
-	Inv_Run   = 1U,
-	Inv_Txo   = 2U,
-	Inv_Rxo   = 3U,
-	Inv_Rxc   = 4U,
-	Inv_Rsp   = 5U,
-	Inv_Rco   = 6U,
-	Inv_Ger   = 7U
+	Inv_Ini = 0U,
+	Inv_Run = 1U,
+	Inv_Txo = 2U,
+	Inv_Rxo = 3U,
+	Inv_Rxc = 4U,
+	Inv_Rsp = 5U,
+	Inv_Rco = 6U,
+	Inv_Ger = 7U
 } PACKED invst_t;
 
 typedef enum
 {
-	Tmp_Ini  = 0,
-	Tmp_Run  = 1,
-	Tmp_Eoc  = 2,
-	Tmp_Eov  = 3,
-	Tmp_Etl  = 4,
-	Tmp_Eth  = 5,
-	Tmp_Ecl  = 6,
-	Tmp_Ech  = 7,
-	Tmp_Etr  = 8,
-	Tmp_Ecr  = 9
+	Tmp_Ini = 0,
+	Tmp_Run = 1,
+	Tmp_Eoc = 2,
+	Tmp_Eov = 3,
+	Tmp_Etl = 4,
+	Tmp_Eth = 5,
+	Tmp_Ecl = 6,
+	Tmp_Ech = 7,
+	Tmp_Etr = 8,
+	Tmp_Ecr = 9
 } PACKED tmpst_t;
 
 typedef enum
@@ -73,182 +78,178 @@ typedef enum
 
 typedef struct
 {
-	uint16_t DO1:1;
-	uint16_t DO2:1;
-	uint16_t DO3:1;
-	uint16_t DO4:1;
-	uint16_t DO5:1;
-	uint16_t DO6:1;
-	uint16_t DO7:1;
-	uint16_t DO8:1;
-	uint16_t RO1:1;
-	uint16_t RO2:1;
-	uint16_t RO3:1;
-	uint16_t RO4:1;
-	uint16_t RO5:1;
-	uint16_t RO6:1;
-	uint16_t RO7:1;
-	uint16_t RO8:1;
+	uint16_t DO1 : 1;
+	uint16_t DO2 : 1;
+	uint16_t DO3 : 1;
+	uint16_t DO4 : 1;
+	uint16_t DO5 : 1;
+	uint16_t DO6 : 1;
+	uint16_t DO7 : 1;
+	uint16_t DO8 : 1;
+	uint16_t RO1 : 1;
+	uint16_t RO2 : 1;
+	uint16_t RO3 : 1;
+	uint16_t RO4 : 1;
+	uint16_t RO5 : 1;
+	uint16_t RO6 : 1;
+	uint16_t RO7 : 1;
+	uint16_t RO8 : 1;
 } abbio_t;
 
 typedef struct
 {
-	float       MdlManChr;
-	float       MdlManInj;
-	float       MdlManCdr;
-	float       MdlManCar;
-	uint8_t     MdlExhAcv;
-	uint8_t     MdlMisAcv;
-	uint8_t     MdlIgnAcv;
-	uint8_t     MdlAlmAcv;
-	mdlst_t     MdlModReq;
-	uint8_t     VinEndRes_0;
-	uint8_t     VinEndRes_1;
-	uint8_t     VinEndRes_2;
+	float MdlManChr;   //Massa de café torrado em gramas para modo automático
+	float MdlManInj;   //Percentual de chama no modo manual
+	float MdlManCdr;   //Percentual de tambor no modo manual
+	float MdlManCar;   //Percentual de ar no modo manual
+	uint8_t MdlExhAcv; //Byte de ativação do exaustor
+	uint8_t MdlMisAcv; //Byte de ativação do misturador
+	uint8_t MdlIgnAcv; //Byte de ativação da chama
+	uint8_t MdlAlmAcv; //Byte de ativação do alarme
+	mdlst_t ItfModReq; //Altera os modos da maquina
+	uint8_t VinEndRes_0;
+	uint8_t VinEndRes_1;
+	uint8_t VinEndRes_2;
 } vib_t;
 
 typedef struct
 {
-	blk_t       BlkBegVin;
-	vib_t       PkgBlkVin;
-	blk_t       BlkEndVin;
+	blk_t BlkBegVin;
+	vib_t Blk;
+	blk_t BlkEndVin;
 } vin_t;
 
 typedef struct
 {
-	uint32_t    MdlWrkCnt;
-	float       AdcInpLin[ADC_CMAX];
-	float       AdcInpScl[ADC_CMAX];
-	float       TmpInpLin[TMP_CMAX];
-	float       CpuTmpScl;
-	float       CpuVrfScl;
-	float       CpuVbtScl;
-	float       BchTmpLin;
-	float       BchTmpScl;
-	float       BchPrsLin;
-	float       BchPrsScl;
-	float       BchHumLin;
-	float       BchHumScl;
-	float       InvSpdReq[INV_CMAX];
-	float       InvTrqReq[INV_CMAX];
-	float       InvTmpScl[INV_CMAX];
-	float       InvPrsScl;
-	float       InjPwmReq;
-	float       MdlGraLin;
-    float       MdlGraScl;
-	float       MdlAirLin;
-	float       MdlAirScl;
-    float       MdlRorPrv;
-    float       MdlRorCur;
-    float       MdlRorVal;
-    float       MdlDisErr;
-	float       MdlInjOut;
-	float       MdlDruOut;
-	float       MdlAirOut;
-	float       MdlTmpInt;
-	float       MdlTmpTgr;
-	float       MdlCorAir;
-	int16_t     InvSpdSet[INV_CMAX];
-	int16_t     InvTrqSet[INV_CMAX];
-	int16_t     InvAd0Get[INV_CMAX];
-	int16_t     InvAd1Get[INV_CMAX];
-	abbio_t     InvDgoSet[INV_CMAX];
-	uint16_t    InvTxoCnt[INV_CMAX];
-	uint16_t    InvRxoCnt[INV_CMAX];
-	uint16_t    InvRxcCnt[INV_CMAX];
-	uint16_t    InvRspCnt[INV_CMAX];
-	uint16_t    InvRedCnt[INV_CMAX];
-	uint16_t    InvWriCnt[INV_CMAX];
-	uint16_t    InjPwmSet;
-	uint16_t    MdlLocCnt;
-	uint16_t    MdlGenCnt;
-	uint16_t    MdlRunCnt;
-	invst_t     InvModSts[INV_CMAX];
-	tmpst_t     TmpModSts[TMP_CMAX];
-	adcst_t     AdcModSts;
-	mdlst_t     ItfMdlPrv;
-	mdlst_t     MdlModPrv;
-	mdlst_t     MdlModSts;
-	bchst_t     BchModSts;
-	uint8_t     VouEndRes_0;
-	uint8_t     VouEndRes_1;
-	uint8_t     VouEndRes_2;
+	uint32_t MdlWrkCnt;
+	float AdcInpLin[ADC_CMAX];
+	float AdcInpScl[ADC_CMAX];
+	float TmpInpLin[TMP_CMAX];
+	float CpuTmpScl;
+	float CpuVrfScl;
+	float CpuVbtScl;
+	float BchTmpLin;
+	float BchTmpScl;
+	float BchPrsLin;
+	float BchPrsScl;
+	float BchHumLin;
+	float BchHumScl;
+	float InvSpdReq[INV_CMAX];
+	float InvTrqReq[INV_CMAX];
+	float InvTmpScl[INV_CMAX];
+	float InvPrsScl;
+	float InjPwmReq;
+	float MdlGraLin;
+	float MdlGraScl; //Temperatura do grão
+	float MdlAirLin;
+	float MdlAirScl; //Temperatura do ar
+	float MdlRorPrv;
+	float MdlRorCur;
+	float MdlRorVal; //Ror
+	float MdlDisErr;
+	float MdlInjOut; //Percentual de chama
+	float MdlDruOut; //Percentual de tambor
+	float MdlAirOut; //Percentual de ar
+	float MdlTmpInt;
+	float MdlTmpTgr;
+	float MdlCorAir;
+	int16_t InvSpdSet[INV_CMAX];
+	int16_t InvTrqSet[INV_CMAX];
+	int16_t InvAd0Get[INV_CMAX];
+	int16_t InvAd1Get[INV_CMAX];
+	abbio_t InvDgoSet[INV_CMAX];
+	uint16_t InvTxoCnt[INV_CMAX];
+	uint16_t InvRxoCnt[INV_CMAX];
+	uint16_t InvRxcCnt[INV_CMAX];
+	uint16_t InvRspCnt[INV_CMAX];
+	uint16_t InvRedCnt[INV_CMAX];
+	uint16_t InvWriCnt[INV_CMAX];
+	uint16_t InjPwmSet;
+	uint16_t MdlLocCnt;
+	uint16_t MdlGenCnt;
+	uint16_t MdlRunCnt;
+	invst_t InvModSts[INV_CMAX];
+	tmpst_t TmpModSts[TMP_CMAX];
+	adcst_t AdcModSts;
+	mdlst_t MdlModPrv;
+	mdlst_t MdlModSts; //Modo de funcionamento atual da maquina
+	bchst_t BchModSts;
 } vob_t;
 
 typedef struct
 {
-	blk_t       BlkBegVou;
-	vob_t       PkgBlkVou;
-	blk_t       BlkEndVou;
+	blk_t BlkBegVou;
+	vob_t Blk;
+	blk_t BlkEndVou;
 } vou_t;
 
 typedef struct
 {
-	vin_t PkgPkgVin;
-	vou_t PkgPkgVou;
-} memvar_t;
+	vin_t Vin; //Read_Write
+	vou_t Vou; //Read_Only
+} memvar_t;	   //var_t Leitura: Estrutura é recebida 1 vez após a conexão na porta 555 e depois é recebida a cada 200ms na porta 888, Escrita a qualquer momento somente o Vin.
 
 typedef struct
 {
-	float    Bkp_x[L1D_SMAX];
-	float    Tbl_z[L1D_SMAX];
+	float Bkp_x[L1D_SMAX];
+	float Tbl_z[L1D_SMAX];
 } lut1D_t;
 
 typedef struct
 {
-	float    Bkp_x[L2D_SMAX];
-	float    Bkp_y[L2D_SMAX];
-	float    Tbl_z[L2D_SMAX*L2D_SMAX];
+	float Bkp_x[L2D_SMAX];
+	float Bkp_y[L2D_SMAX];
+	float Tbl_z[L2D_SMAX * L2D_SMAX];
 } lut2D_t;
 
 typedef struct
 {
-	lut1D_t     MdlWupChr;
-	lut1D_t     MdlRunCdr;
-	lut1D_t     MdlRunCar;
-	lut2D_t     MdlRunCin;
-	lut2D_t     MdlCorAir;
-	float       AdcFacFil[ADC_CMAX];
-	float       BchFatFil;
-	float       BchFapFil;
-	float       BchFahFil;
-	float       MdlGraFil;
-	float       MdlRorFil;
-	float       MdlAirFil;
-	float       MdlWuhCdr;
-	float       MdlWuhCar;
-	float       MdlWuhTgr;
-	float       MdlWuhErr;
-	float       MdlWulCdr;
-	float       MdlWulCar;
-	float       MdlWulErr;
-	float       MdlChrCdr;
-	float       MdlChrCar;
-	float       MdlChrFil;
-	float       MdlChrTmp;
-	float       MdlUdsCdr;
-	float       MdlUdsCar;
-	float       MdlUdsCin;
-	float       MdlUdsHys;
-	float       MdlSdwCdr;
-	float       MdlSdwCar;
-	float		MdlSdwLim;
-	float       MdlDruMin;
-	float       MdlDruMax;
-	float       MdlAirMin;
-	float       MdlAirMax;
-	float       MdlInjMin;
-	float       MdlInjMax;
-	uint16_t    MdlWuhCnt;
-	uint16_t    MdlWulCnt;
-	uint16_t    MdlRunCor;
-	uint8_t     ParEndRes_0;
-	uint8_t     ParEndRes_1;
-} pab_t;
+	lut1D_t MdlWupChr;
+	lut1D_t MdlRunCdr;
+	lut1D_t MdlRunCar;
+	lut2D_t MdlRunCin;
+	lut2D_t MdlCorAir;
+	float AdcFacFil[ADC_CMAX];
+	float BchFatFil;
+	float BchFapFil;
+	float BchFahFil;
+	float MdlGraFil;
+	float MdlRorFil;
+	float MdlAirFil;
+	float MdlWuhCdr;
+	float MdlWuhCar;
+	float MdlWuhTgr;
+	float MdlWuhErr;
+	float MdlWulCdr;
+	float MdlWulCar;
+	float MdlWulErr;
+	float MdlChrCdr;
+	float MdlChrCar;
+	float MdlChrFil;
+	float MdlChrTmp;
+	float MdlUdsCdr;
+	float MdlUdsCar;
+	float MdlUdsCin;
+	float MdlUdsHys;
+	float MdlSdwCdr;
+	float MdlSdwCar;
+	float MdlSdwLim;
+	float MdlDruMin;
+	float MdlDruMax;
+	float MdlAirMin;
+	float MdlAirMax;
+	float MdlInjMin;
+	float MdlInjMax;
+	uint16_t MdlWuhCnt;
+	uint16_t MdlWulCnt;
+	uint16_t MdlRunCor;
+	uint8_t ParEndRes_0;
+	uint8_t ParEndRes_1;
+} pab_t; //bpa_t
 
 typedef struct
 {
-	blk_t       BlkBegPar;
-	pab_t       PkgBlkPar;
-	blk_t       BlkEndPar;
-} mempar_t;
+	blk_t BlkBegPar;
+	pab_t Blk; //bpa_t
+	blk_t BlkEndPar;
+} mempar_t; // par_t Leitura: Estrutura é recebida 1 vez após a conexão na porta 888, Escrita a qualquer momento no bloco inteiro.
