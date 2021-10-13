@@ -14,7 +14,7 @@ function create_vin_t() {
     .word8('MdlMisAcv')
     .word8('MdlIgnAcv')
     .word8('MdlAlmAcv')
-    .word8('MdlModReq')
+    .word8('ItfModReq')
     .word8('VinEndRes_0')
     .word8('VinEndRes_1')
     .word8('VinEndRes_2')

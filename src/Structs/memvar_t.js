@@ -15,7 +15,7 @@ function unpack_memvar_t(buffer) {
     .word8('MdlMisAcv')
     .word8('MdlIgnAcv')
     .word8('MdlAlmAcv')
-    .word8('MdlModReq')
+    .word8('ItfModReq') // mdl_st
     .word8('VinEndRes_0')
     .word8('VinEndRes_1')
     .word8('VinEndRes_2')
@@ -71,13 +71,9 @@ function unpack_memvar_t(buffer) {
     .array('InvModSts', INV_CMAX, 'word8Sle') // invst_t
     .array('TmpModSts', TMP_CMAX, 'word8Sle') // tempst_t
     .word8('AdcModSts') // adcst_t
-    .word8('ItfMdlPrv') // mdlst_t
     .word8('MdlModPrv') // mdlst_t
     .word8('MdlModSts') // mdlst_t
     .word8('BchModSts') // bchst_t
-    // .word8('VouEndRes_0')
-    // .word8('VouEndRes_1')
-    // .word8('VouEndRes_2')
     .word32Ule('BlkEndVou');// blk_t
 
   serverData._setBuff(buffer);

@@ -24,7 +24,7 @@ async function connectData() {
   const client = new net.Socket();
   safeEject.run( () => { 
   try{
-    client.connect(555, '192.168.5.1', () => {
+    client.connect(888, '192.168.5.1', () => {
 
       console.log('Client 1: Data connection established with server');
 
@@ -36,6 +36,7 @@ async function connectData() {
       });
 
       client.on('data', (data) => {
+        console.log(data.toString('hex'));
         const unpacked = unpack_memvar_t(data);
         const headers = {
           BlkBegVin: unpacked.get('BlkBegVin').toString(16),
@@ -43,7 +44,8 @@ async function connectData() {
           BlkBegVou: unpacked.get('BlkBegVou').toString(16),
           BlkEndVou: unpacked.get('BlkEndVou').toString(16),
         }
-        if(headers.BlkBegVin === 'aaaaaaaa' && headers.BlkEndVin === 'bbbbbbbb' &&
+          console.log(headers);
+          if(headers.BlkBegVin === 'aaaaaaaa' && headers.BlkEndVin === 'bbbbbbbb' &&
            headers.BlkBegVou === 'cccccccc' && headers.BlkEndVou === 'dddddddd') {
           io.emit('realData', unpacked);
           console.log(unpacked.fields.MdlModSts)

@@ -18,9 +18,9 @@ typedef enum
 	Par_End = 0xFFFFFFFFU
 } blk_t; //32 Bits
 
-#define ADC_CMAX 3U
-#define TMP_CMAX 2U
-#define INV_CMAX 2U
+#define ADC_CMAX 3
+#define TMP_CMAX 2
+#define INV_CMAX 2
 #define L1D_SMAX 15U
 #define L2D_SMAX 15U
 
