@@ -1,3 +1,4 @@
+/* eslint-disable */
 const fs = require('fs');
 const roastModel = require('../Models/RoastModel');
 const { update_vin_t } = require('../Structs/send_vin_t');
