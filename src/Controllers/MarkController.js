@@ -5,11 +5,8 @@ module.exports = {
     async create(req, res) {
         try {
         const Mark = req.body;
-        Mark.forEach( async (element) => {
-            await MarkModel.create(element, roast_id);
-        });
-          const { roast_id } = req.params;
-        //   const result = await MarkModel.create(Mark, roast_id);
+        const { roast_id } = req.params;
+        result = await MarkModel.create(Mark, roast_id);
           return res.status(200).json(result);
         } catch (err) {
           console.warn(`There has been an error while saving the mark name:\n${err}`);
