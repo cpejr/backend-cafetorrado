@@ -7,6 +7,7 @@ module.exports = {
     const mark_id = uuidv4();
       mark.mark_id = mark_id;
       mark.roast_id = roast_id;
+      console.log(mark_id, roast_id);
     const result = await connection('mark').insert(mark);
     return result;
   },

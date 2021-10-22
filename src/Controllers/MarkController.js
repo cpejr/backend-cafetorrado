@@ -6,6 +6,7 @@ module.exports = {
         try {
         const Mark = req.body;
         const { roast_id } = req.params;
+        console.log(Mark, roast_id);
         result = await MarkModel.create(Mark, roast_id);
           return res.status(200).json(result);
         } catch (err) {

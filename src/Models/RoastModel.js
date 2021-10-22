@@ -13,8 +13,8 @@ module.exports = {
       if (err) throw err;
     });
 
-    const result = await connection('roast').insert(roast);
-    return result;
+    await connection('roast').insert(roast);
+    return roast.roast_id;
   },
 
   async get() {
