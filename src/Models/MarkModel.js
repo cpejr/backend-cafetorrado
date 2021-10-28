@@ -10,4 +10,12 @@ module.exports = {
     const result = await connection('mark').insert(mark);
     return result;
   },
+
+  async getByRoastId(roast_id) {
+    const result = await connection('mark')
+      .select('*')
+      .where({ roast_id })
+      .first();
+    return result;
+  }
 };
