@@ -16,7 +16,6 @@ module.exports = {
     const result = await connection('mark')
       .select('*')
       .where({ roast_id })
-      .first();
     return result;
   }
 };

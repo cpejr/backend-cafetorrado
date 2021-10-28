@@ -20,7 +20,6 @@ module.exports = {
     try {
       const { roast_id } = req.params;
       const result = await MarkModel.getByRoastId(roast_id);
-      console.log(result);
       return res.status(200).json(result);
     } catch (err) {
       console.warn(`There has been an error while getting the marks name:\n${err}`);
