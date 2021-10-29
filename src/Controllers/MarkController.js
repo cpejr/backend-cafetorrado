@@ -1,4 +1,3 @@
-/* eslint-disable */
 const MarkModel = require('../Models/MarkModel');
 
 module.exports = {
@@ -27,5 +26,5 @@ module.exports = {
         error: 'Failed to get Marks by Roast Id',
       });
     }
-  }
+  },
 };
