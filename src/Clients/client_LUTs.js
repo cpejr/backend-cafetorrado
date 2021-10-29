@@ -10,7 +10,7 @@ async function connectMachineParams() {
   let client = new net.Socket();
   return safeEject.run(() => new Promise((resolve, reject) => {
     try {
-      client.connect(888, '192.168.5.1', () => {
+      client.connect(555, '192.168.5.1', () => {
         console.log('Client: LUT connection established with server');
 
         client.on('close', () => {
@@ -39,7 +39,7 @@ async function sendMachineParams() {
   let client = new net.Socket();
   return safeEject.run(() => new Promise((resolve, reject) => {
     try {
-      client.connect(888, '192.168.5.1', async () => {
+      client.connect(555, '192.168.5.1', async () => {
         console.log('Client: LUT connection established with server');
         client.on('close', () => {
           console.log('Wifi configuration connection closed');
@@ -60,7 +60,7 @@ async function sendStaticParams(BUFFERLut = Buffer.alloc(2548)) {
   let client = new net.Socket();
   return safeEject.run(() => new Promise((resolve, reject) => {
     try {
-      client.connect(888, '192.168.5.1', async () => {
+      client.connect(555, '192.168.5.1', async () => {
         console.log('Client: LUT connection established with server');
         client.on('close', () => {
           console.log('Wifi configuration connection closed');

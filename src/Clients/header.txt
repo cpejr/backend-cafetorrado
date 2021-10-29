@@ -1,0 +1,269 @@
+/*
+ * header.h
+ *
+ *  Created on: Mar 27, 2021
+ *      Author: Mescua
+ */
+
+#ifndef INC_HEADER_H_
+#define INC_HEADER_H_
+
+#define L1D_SMAX 15U
+#define L2D_SMAX 15U
+
+#define ADC_CMAX 3U
+#define TMP_CMAX 2U
+#define INV_CMAX 2U
+
+typedef enum
+{
+	Par_Prt = 555U,
+	Var_Prt = 888U
+} itfls_t; //16 Bits
+
+typedef struct
+{
+	float    Bkp_x[L1D_SMAX];
+	float    Tbl_z[L1D_SMAX];
+} lut1D_t;
+
+typedef struct
+{
+	float    Bkp_x[L2D_SMAX];
+	float    Bkp_y[L2D_SMAX];
+	float    Tbl_z[L2D_SMAX*L2D_SMAX];
+} lut2D_t;
+
+typedef enum
+{
+	//Variáveis para alterar em tempo real.
+	Vin_Beg = 0xAAAAAAAAU,
+	Vin_End = 0xBBBBBBBBU,
+
+        //Variáveis de monitoramento.
+	Vou_Beg = 0xCCCCCCCCU,
+	Vou_End = 0xDDDDDDDDU,
+
+	//Variáveis de configuração.
+	Par_Beg = 0xEEEEEEEEU,
+	Par_End = 0xFFFFFFFFU
+} blk_t; //32 Bits
+
+typedef enum
+{
+	Sts_Off  =  0U, //Maquina vai desligar "Não recomendado"
+	Sts_Man  =  1U, //Maquina vai entrar em modo manual
+	Sts_Wuh  =  2U, //Inicia a torra automática - WakeUp High
+	Sts_Wul  =  3U, //WakeUp low
+	Sts_Chr  =  4U, //Charge
+	Sts_Uds  =  5U, //Undeshoot
+	Sts_Run  =  6U, //Running
+	Sts_Sdw  =  7U  //Maquina vai cortar a chama, aumentar o fluxo de ar, aumentar velocidade do tambor, aguardar a teperatura do grão ser adequada e desligar.
+} mdlst_t;
+
+typedef struct
+{
+	float       MdlManChr; //Massa de café torrado em gramas para modo automático
+	float       MdlManInj; //Percentual de chama no modo manual
+	float       MdlManCdr; //Percentual de tambor no modo manual
+	float       MdlManCar; //Percentual de ar no modo manual
+	uint8_t     MdlExhAcv; //Byte de ativação do exaustor
+	uint8_t     MdlMisAcv; //Byte de ativação do misturador
+	uint8_t     MdlIgnAcv; //Byte de ativação da chama
+	uint8_t     MdlAlmAcv; //Byte de ativação do alarme
+	mdlst_t     ItfModReq; //Altera os modos da maquina
+	uint8_t     VinEndRes_0;
+	uint8_t     VinEndRes_1;
+	uint8_t     VinEndRes_2;
+} bvi_t;
+
+typedef struct
+{
+	blk_t       BlkBegVin;
+	bvi_t       Blk;
+	blk_t       BlkEndVin;
+} vin_t;
+
+typedef struct
+{
+	uint16_t DO1:1;
+	uint16_t DO2:1;
+	uint16_t DO3:1;
+	uint16_t DO4:1;
+	uint16_t DO5:1;
+	uint16_t DO6:1;
+	uint16_t DO7:1;
+	uint16_t DO8:1;
+	uint16_t RO1:1;
+	uint16_t RO2:1;
+	uint16_t RO3:1;
+	uint16_t RO4:1;
+	uint16_t RO5:1;
+	uint16_t RO6:1;
+	uint16_t RO7:1;
+	uint16_t RO8:1;
+} abbio_t;
+
+typedef enum
+{
+	Inv_Ini   = 0U,
+	Inv_Run   = 1U,
+	Inv_Txo   = 2U,
+	Inv_Rxo   = 3U,
+	Inv_Rxc   = 4U,
+	Inv_Rsp   = 5U,
+	Inv_Rco   = 6U,
+	Inv_Ger   = 7U
+} invst_t;
+
+typedef enum
+{
+	Tmp_Ini  = 0,
+	Tmp_Run  = 1,
+	Tmp_Eoc  = 2,
+	Tmp_Eov  = 3,
+	Tmp_Etl  = 4,
+	Tmp_Eth  = 5,
+	Tmp_Ecl  = 6,
+	Tmp_Ech  = 7,
+	Tmp_Etr  = 8,
+	Tmp_Ecr  = 9
+} tmpst_t;
+
+typedef enum
+{
+	Adc_Ini = 0U,
+	Adc_Run = 1U
+} adcst_t;
+
+typedef enum
+{
+	Bch_Ini = 0U,
+	Bch_Run = 1U,
+	Bch_Ier = 2U,
+	Bch_Rer = 3U
+} bchst_t;
+
+typedef struct
+{
+	uint32_t    MdlWrkCnt;
+	float       AdcInpLin[ADC_CMAX];
+	float       AdcInpScl[ADC_CMAX];
+	float       TmpInpLin[TMP_CMAX];
+	float       CpuTmpScl;
+	float       CpuVrfScl;
+	float       CpuVbtScl;
+	float       BchTmpLin;
+	float       BchTmpScl;
+	float       BchPrsLin;
+	float       BchPrsScl;
+	float       BchHumLin;
+	float       BchHumScl;
+	float       InvSpdReq[INV_CMAX];
+	float       InvTrqReq[INV_CMAX];
+	float       InvTmpScl[INV_CMAX];
+	float       InvPrsScl;
+	float       InjPwmReq;
+	float       MdlGraLin;
+    	float       MdlGraScl; //Temperatura do grão
+	float       MdlAirLin;
+	float       MdlAirScl; //Temperatura do ar
+    	float       MdlRorPrv;
+    	float       MdlRorCur;
+    	float       MdlRorVal; //Ror
+    	float       MdlDisErr;
+	float       MdlInjOut; //Percentual de chama
+	float       MdlDruOut; //Percentual de tambor
+	float       MdlAirOut; //Percentual de ar
+	float       MdlTmpInt;
+	float       MdlTmpTgr;
+	float       MdlCorAir;
+	int16_t     InvSpdSet[INV_CMAX];
+	int16_t     InvTrqSet[INV_CMAX];
+	int16_t     InvAd0Get[INV_CMAX];
+	int16_t     InvAd1Get[INV_CMAX];
+	abbio_t     InvDgoSet[INV_CMAX];
+	uint16_t    InvTxoCnt[INV_CMAX];
+	uint16_t    InvRxoCnt[INV_CMAX];
+	uint16_t    InvRxcCnt[INV_CMAX];
+	uint16_t    InvRspCnt[INV_CMAX];
+	uint16_t    InvRedCnt[INV_CMAX];
+	uint16_t    InvWriCnt[INV_CMAX];
+	uint16_t    InjPwmSet;
+	uint16_t    MdlLocCnt;
+	uint16_t    MdlGenCnt;
+	uint16_t    MdlRunCnt;
+	invst_t     InvModSts[INV_CMAX];
+	tmpst_t     TmpModSts[TMP_CMAX];
+	adcst_t     AdcModSts;
+	mdlst_t     MdlModPrv;
+	mdlst_t     MdlModSts; //Modo de funcionamento atual da maquina
+	bchst_t     BchModSts;
+} bvo_t;
+
+typedef struct
+{
+	blk_t       BlkBegVou;
+	bvo_t 	    Blk;
+	blk_t       BlkEndVou;
+} vou_t;
+
+typedef struct
+{
+	vin_t Vin; //Read_Write
+	vou_t Vou; //Read_Only
+} var_t; //Leitura: Estrutura é recebida 1 vez após a conexão na porta 555 e depois é recebida a cada 200ms na porta 888, Escrita a qualquer momento somente o Vin.
+
+typedef struct
+{
+	lut1D_t     MdlWupChr;
+	lut1D_t     MdlRunCdr;
+	lut1D_t     MdlRunCar;
+	lut2D_t     MdlRunCin;
+	lut2D_t     MdlCorAir;
+	float       AdcFacFil[ADC_CMAX];
+	float       BchFatFil;
+	float       BchFapFil;
+	float       BchFahFil;
+	float       MdlGraFil;
+	float       MdlRorFil;
+	float       MdlAirFil;
+	float       MdlWuhCdr;
+	float       MdlWuhCar;
+	float       MdlWuhTgr;
+	float       MdlWuhErr;
+	float       MdlWulCdr;
+	float       MdlWulCar;
+	float       MdlWulErr;
+	float       MdlChrCdr;
+	float       MdlChrCar;
+	float       MdlChrFil;
+	float       MdlChrTmp;
+	float       MdlUdsCdr;
+	float       MdlUdsCar;
+	float       MdlUdsCin;
+	float       MdlUdsHys;
+	float       MdlSdwCdr;
+	float       MdlSdwCar;
+	float	    MdlSdwLim;
+	float       MdlDruMin;
+	float       MdlDruMax;
+	float       MdlAirMin;
+	float       MdlAirMax;
+	float       MdlInjMin;
+	float       MdlInjMax;
+	uint16_t    MdlWuhCnt;
+	uint16_t    MdlWulCnt;
+	uint16_t    MdlRunCor;
+	uint8_t     ParEndRes_0;
+	uint8_t     ParEndRes_1;
+} bpa_t;
+
+typedef struct
+{
+	blk_t       BlkBegPar;
+	bpa_t       Blk;
+	blk_t       BlkEndPar;
+} par_t; //Leitura: Estrutura é recebida 1 vez após a conexão na porta 888, Escrita a qualquer momento no bloco inteiro.
+
+#endif /* INC_HEADER_H_ */

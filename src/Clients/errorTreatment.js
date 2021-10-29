@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-expressions */
 const domain = require('domain');
-const { io, socketListener } = require('../Socket/Assets');
-const { checkWifiConnection } = require('../wifiObserver');
+const { io } = require('../Socket/Assets');
 
 const safeEject = domain.create();
 const runtimeException = { status: false };
@@ -13,10 +11,6 @@ const exceptionStatus = () => runtimeException.status;
 //   'NotConnected',
 //   'wrongConnection',
 // ];
-
-const unknownError = (err) => {
-  console.error('This is an unknown error', err);
-};
 
 safeEject.on('error', async (err) => {
   console.log('errou', err);
