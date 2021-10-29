@@ -15,7 +15,6 @@ const routes = express.Router();
 routes.get('/', RoastController.get);
 routes.get('/getUniqueRoastData/:roast_id', RoastController.getUniqueRoastData);
 routes.get('/getLastTheme', ThemeController.get);
-routes.get('/marks/:roast_id', MarkController.getByRoastId);
 
 routes.delete('/deleteLastRoast', RoastController.deleteLast);
 routes.delete('/deleteSpecificRoast/:roast_id', RoastController.deleteSpecific);
