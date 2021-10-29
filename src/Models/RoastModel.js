@@ -15,8 +15,8 @@ module.exports = {
       if (err) throw err;
     });
 
-    await connection('roast').insert(roast);
-    return roast.roast_id;
+    const result = await connection('roast').insert(roast);
+    return result;
   },
 
   async get() {

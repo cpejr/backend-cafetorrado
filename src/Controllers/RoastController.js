@@ -1,4 +1,3 @@
-/* eslint-disable */
 const fs = require('fs');
 const { application } = require('express');
 const roastModel = require('../Models/RoastModel');
