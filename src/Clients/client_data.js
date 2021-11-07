@@ -28,7 +28,7 @@ async function connectData() {
   const client = new net.Socket();
   safeEject.run(() => {
     try {
-      client.connect(888, '192.168.5.1', () => {
+      client.connect(888, '10.10.10.100', () => {
 
         console.log('Client 1: Data connection established with server');
 
