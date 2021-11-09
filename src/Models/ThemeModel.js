@@ -4,6 +4,16 @@ module.exports = {
   async get() {
     const result = await connection('themes')
       .select('*').first();
+    if (!result) {
+      await connection('themes').insert({
+        theme_id: 1,
+        lastTheme: 'technologic',
+      });
+      return {
+        theme_id: 1,
+        lastTheme: 'technologic',
+      };
+    }
     return result;
   },
 

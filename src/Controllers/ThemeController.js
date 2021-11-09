@@ -4,7 +4,6 @@ module.exports = {
 
   async get(req, res) {
     try {
-      console.log('oi');
       const result = await ThemeModel.get();
       return res.status(200).json(result);
     } catch (err) {
