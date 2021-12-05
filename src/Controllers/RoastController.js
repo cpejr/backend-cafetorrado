@@ -1,13 +1,13 @@
 /* eslint-disable */
-const fs = require('fs');
-const { application } = require('express');
-const roastModel = require('../Models/RoastModel');
-const { update_vin_t } = require('../Structs/send_vin_t');
-const { update_par_t } = require('../Structs/send_par_t');
-const { sendNewParameters } = require('../Clients/manager');
-const { sendStaticParams } = require('../Clients/client_LUTs');
-const { create_par_t } = require('../Structs/par_t');
-const { connectMachineParams } = require('../Clients/client_LUTs');
+const fs = require("fs");
+const { application } = require("express");
+const roastModel = require("../Models/RoastModel");
+const { update_vin_t } = require("../Structs/send_vin_t");
+const { update_par_t } = require("../Structs/send_par_t");
+const { sendNewParameters } = require("../Clients/manager");
+const { sendStaticParams } = require("../Clients/client_LUTs");
+const { create_par_t } = require("../Structs/par_t");
+const { connectMachineParams } = require("../Clients/client_LUTs");
 /*
 Pra testar, eu to fazendo o seguinte, criei um arquivo par_t baseado nos parametros que a gente tem
 coloquei os header e alterei um valor dentro de uma das lookuptables, daí quando chama a rota criada
@@ -27,9 +27,11 @@ module.exports = {
       const result = await roastModel.create(Roast);
       return res.status(200).json(result);
     } catch (err) {
-      console.warn(`There has been an error on the creation of the roast:\n${err}`);
+      console.warn(
+        `There has been an error on the creation of the roast:\n${err}`
+      );
       return res.status(500).json({
-        error: 'Failed to create Roast',
+        error: "Failed to create Roast",
       });
     }
   },
@@ -39,28 +41,34 @@ module.exports = {
       const result = await roastModel.get();
       return res.status(200).json(result);
     } catch (err) {
-      console.warn(`There has been an error on the creation of the roast:\n${err}`);
+      console.warn(
+        `There has been an error on the creation of the roast:\n${err}`
+      );
       return res.status(500).json({
-        error: 'Failed to get Roasts',
+        error: "Failed to get Roasts",
       });
     }
   },
 
   async deleteLast(req, res) {
-    fs.rmdir('src/RoastArchive/TEMPORARY', { recursive: true }, (err) => { if (err) throw err; });
-    return res.status(200).json({ message: 'Roast sucessfully Deleted' });
+    fs.rmdir("src/RoastArchive/TEMPORARY", { recursive: true }, (err) => {
+      if (err) throw err;
+    });
+    return res.status(200).json({ message: "Roast sucessfully Deleted" });
   },
 
   async deleteSpecific(req, res) {
     try {
       const { roast_id } = req.params;
-      fs.rmdir(`src/RoastArchive/${roast_id}`, { recursive: true }, (err) => { if (err) throw err; });
+      fs.rmdir(`src/RoastArchive/${roast_id}`, { recursive: true }, (err) => {
+        if (err) throw err;
+      });
       const result = await roastModel.deleteById(roast_id);
       return res.status(200).json(result);
     } catch (err) {
       console.log(`Roast delete failed: ${err}`);
       return res.status(500).json({
-        notification: 'Internal server error while trying to delete Roast',
+        notification: "Internal server error while trying to delete Roast",
       });
     }
   },
@@ -73,33 +81,43 @@ module.exports = {
       return res.status(200).json({ data });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ Message: 'ERRO', err });
+      return res.status(500).json({ Message: "ERRO", err });
     }
   },
 
   async bounceToData(req, res) {
     try {
       update_vin_t(req.body);
-      return res.status(200).json({ Message: 'Sucessfully changed data' });
+      return res.status(200).json({ Message: "Sucessfully changed data" });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ Message: 'There has been an error on the update' });
+      return res
+        .status(500)
+        .json({ Message: "There has been an error on the update" });
     }
   },
   async bounceToParameters(req, res) {
     try {
       const struct = update_par_t(req.body);
-      return res.status(200).json({ Message: 'Sucessfully changed parameters of LUTs', struct });
+      return res
+        .status(200)
+        .json({ Message: "Sucessfully changed parameters of LUTs", struct });
     } catch (err) {
-      return res.status(500).json({ Message: 'There has been an error on the update' });
+      return res
+        .status(500)
+        .json({ Message: "There has been an error on the update" });
     }
   },
   async sendParameters(req, res) {
     try {
       const result = await sendNewParameters();
-      return res.status(200).json({ Message: 'Sucessfully sent parameters of LUTs', result });
+      return res
+        .status(200)
+        .json({ Message: "Sucessfully sent parameters of LUTs", result });
     } catch (err) {
-      return res.status(500).json({ Message: 'There has been an error on the update of LUTs' });
+      return res
+        .status(500)
+        .json({ Message: "There has been an error on the update of LUTs" });
     }
   },
 
@@ -109,15 +127,20 @@ module.exports = {
       // Com o encoding descoberto é ajeitar pra logica que já haviamos discutido
       try {
         // Crio o arquivo teste com um buffer do tamanho correto com as validações necessárias
-        fs.writeFileSync('src/RoastArchive/testfile', par_t.buffer());
+        fs.writeFileSync("src/RoastArchive/testfile", par_t.buffer());
         // leio desse arquivo que acabei de criar. O encoding é o padrão mesmo, então nem precisa
         // colocar nada
-        const PARDATA = fs.readFileSync('src/RoastArchive/testfile');
+        const PARDATA = fs.readFileSync("src/RoastArchive/testfile");
         // envio pra maquina o arquivo
         await sendStaticParams(PARDATA);
         // leio o dado e verifico se está corretp
         const data = await connectMachineParams();
-        return res.status(200).json({ message: 'Parameters sent to esp, YES', DATA: data.fields.MdlWupChr.Bkp_x[0] });
+        return res
+          .status(200)
+          .json({
+            message: "Parameters sent to esp, YES",
+            DATA: data.fields.MdlWupChr.Bkp_x[0],
+          });
         // Averiguar com o Hnerique: QUando a porta 888 é aberta, enviado os dados e fechada,
         // bloqueia o envio de mais dados. É preciso reiniciar o sistema. Bug?
       } catch (error) {
@@ -126,6 +149,24 @@ module.exports = {
     } catch (error) {
       console.log(req.params);
       return res.status(500).json({ Message: req.params });
+    }
+  },
+
+  async sendUploadFile(req, res) {
+    try {
+      console.log(req.files);
+      const fileToUpload = req.files.file;
+      fs.appendFile(`src/Uploads/${fileToUpload.name}`, fileToUpload.data, (error) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({ error });
+        } else {
+          return res.status(200).json({ Message: "Save sucessfull" });
+        }
+      });     
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error });
     }
   },
 };

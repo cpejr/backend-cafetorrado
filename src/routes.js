@@ -29,6 +29,7 @@ routes.post('/sendMachineParameters', RoastController.sendParameters);
 routes.post('/sendStaticLUTs/:roast_id', RoastController.sendStaticParameters);
 
 routes.put('/updateLastTheme', ThemeController.updateLastTheme);
+routes.post('/sendUploadFile', RoastController.sendUploadFile);
 
 // socket side
 routes.get('/connectData', connectToDataPort);
