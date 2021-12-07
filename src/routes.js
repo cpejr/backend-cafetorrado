@@ -8,6 +8,7 @@ const {
 } = require('./Clients/manager');
 const ThemeController = require('./Controllers/ThemeController');
 const { sendMachineParams } = require('./Clients/client_LUTs');
+const LoginController = require('./Controllers/LoginController');
 
 const routes = express.Router();
 // Server side
@@ -34,5 +35,8 @@ routes.put('/updateLastTheme', ThemeController.updateLastTheme);
 routes.get('/connectData', connectToDataPort);
 routes.get('/disconnectData', disconnectData);
 routes.get('/connectParameters', connectToParameters);
+
+// session
+routes.post('/login', LoginController.signIn);
 
 module.exports = routes;

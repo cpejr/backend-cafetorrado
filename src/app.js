@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config({ path: './database/migrations/20211202161042_user.js' });
 const morgan = require('morgan');
 const cors = require('cors');
 const routes = require('./routes');
