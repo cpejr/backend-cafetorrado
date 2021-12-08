@@ -20,8 +20,8 @@ async function connectMachineParams() {
         client.on('data', async (data) => {
           bufArr.push(data);
           if (!asyncConnect) { asyncConnect += 1; return; }
-          const buffer = Buffer.concat(bufArr);
-          const unpacked = create_par_t(buffer);
+          const buffer = Buffer.concat(bufArr); // Buffer C da Lut <- Escrever este objeto no arquivo do sistema 
+          const unpacked = create_par_t(buffer); // Objeto JavaScript da LUT
           await client.destroy();
           await (client = null);
           asyncConnect = 0;
@@ -35,7 +35,7 @@ async function connectMachineParams() {
   }));
 }
 
-async function sendMachineParams() {
+async function sendMachineParams(Buffer = Buffer.alloc(2548)) {
   let client = new net.Socket();
   return safeEject.run(() => new Promise((resolve, reject) => {
     try {
@@ -44,8 +44,7 @@ async function sendMachineParams() {
         client.on('close', () => {
           console.log('Wifi configuration connection closed');
         });
-        console.log(send_par_t());
-        await client.write(send_par_t());
+        await client.write(Buffer);
         await client.destroy();
         await (client = null);
         resolve([client]);
@@ -77,4 +76,17 @@ async function sendStaticParams(BUFFERLut = Buffer.alloc(2548)) {
   }));
 }
 
-module.exports = { connectMachineParams, sendMachineParams, sendStaticParams };
+module.exports = {
+  connectMachineParams,
+  sendMachineParams,
+  sendStaticParams,
+  sendLutToMachine,
+};
+
+
+/* 
+ *  Sobre o algorito de explosão de explosão 
+ *   2 5 6 7 8 4
+ *   6 5 6 5 4 6
+ *   1 2 3 4 5 6
+ */

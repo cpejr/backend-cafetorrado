@@ -110,7 +110,11 @@ module.exports = {
   },
   async sendParameters(req, res) {
     try {
-      const result = await sendNewParameters();
+      // const {roastName} = req.body => Referencia para qual arquivo lut será selecionado 
+      // Procura a torra que tem esse nome
+      // Seleciona o arquivo LUT correspondente
+      // Chama a função de enviar a torra
+      const result = await sendNewParameters(); // Passar como parâmetro aqui, o buffer que foi lido pela memória do sistema 
       return res
         .status(200)
         .json({ Message: "Sucessfully sent parameters of LUTs", result });

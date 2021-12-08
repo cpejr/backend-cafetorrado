@@ -11,7 +11,7 @@ const update_par_t = (newParameters) => {
 
 const send_par_t = () => {
   par_t.fields.MdlWupChr.Bkp_x[0] = 0xffff;
-  console.log(par_t.buffer().toString('hex'));
+  par_t.fields.MdlWupChr.Bkp_x[1] = 21;
   return par_t.buffer();
 };
 

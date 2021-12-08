@@ -4,6 +4,7 @@ const { Struct } = require('struct');
 const L1D_SMAX = 15;
 const L2D_SMAX = 15;
 const ADC_CMAX = 3;
+
 const lut1d_t = new Struct()
   .array('Bkp_x', L1D_SMAX, 'floatle')
   .array('Tbl_z', L1D_SMAX, 'floatle');
@@ -15,7 +16,7 @@ const lut2d_t = new Struct()
 
 const create_par_t = (buffer) => {
   const par_t = new Struct()
-    .word32Ule('BlkBegPar')
+    .word32Ule('BlkBegPar') // Header de validação da LUT inicial => 'eeeeeeee
     .struct('MdlWupChr', lut1d_t)
     .struct('MdlRunCdr', lut1d_t)
     .struct('MdlRunCar', lut1d_t)
@@ -57,7 +58,7 @@ const create_par_t = (buffer) => {
     .word16Ule('MdlRunCor')
     .word8('ParEndRes_0')
     .word8('ParEndRes_1')
-    .word32Ule('BlkEndPar');
+    .word32Ule('BlkEndPar'); // Header de validação da LUT => 'ffffffff'
 
   par_t._setBuff(buffer);
   return par_t;
