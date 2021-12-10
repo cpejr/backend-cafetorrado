@@ -12,7 +12,7 @@ module.exports = {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err) => {
       if (err) return response.status(403).json({ error: 'Invalid authorization token' });
 
-      request.session = data;
+      data = request.session;
 
       next();
     });

@@ -3,16 +3,15 @@ const UserModel = require('../Models/UserModel');
 
 module.exports = {
   async signIn(request, response) {
-    console.log('AQUI1');
     try {
-      const user = UserModel.get();
-      console.log('AQUI2', { user });
+      const user = await UserModel.get();
       const { username, password } = request.body;
+
       if (user.username === username && user.password === password) {
         const AcessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
           expiresIn: '5h',
         });
-        console.log('AQUI3');
+        delete user.password;
         return response.status(200).json({ user, AcessToken });
       }
     } catch (error) {

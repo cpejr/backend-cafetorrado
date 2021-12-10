@@ -9,6 +9,8 @@ const {
 const ThemeController = require('./Controllers/ThemeController');
 const { sendMachineParams } = require('./Clients/client_LUTs');
 const LoginController = require('./Controllers/LoginController');
+const UserModel = require('./Models/UserModel');
+const UserController = require('./Controllers/UserController');
 
 const routes = express.Router();
 // Server side
@@ -36,7 +38,8 @@ routes.get('/connectData', connectToDataPort);
 routes.get('/disconnectData', disconnectData);
 routes.get('/connectParameters', connectToParameters);
 
-// session
+// session/user
+routes.post('/signUp', UserController.create);
 routes.post('/login', LoginController.signIn);
 
 module.exports = routes;
