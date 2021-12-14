@@ -14,6 +14,7 @@ module.exports = {
         delete user.password;
         return response.status(200).json({ user, AcessToken });
       }
+      return response.status(401).send();
     } catch (error) {
       return response.status(500).json({ notification: 'Error while trying to validate credentials' });
     }

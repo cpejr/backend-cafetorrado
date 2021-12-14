@@ -6,9 +6,9 @@ const {
   connectToParameters, connectToDataPort, disconnectData, writeNewWifi,
 } = require('./Clients/manager');
 const ThemeController = require('./Controllers/ThemeController');
-const { sendMachineParams } = require('./Clients/client_LUTs');
+// const { sendMachineParams } = require('./Clients/client_LUTs');
 const LoginController = require('./Controllers/LoginController');
-const UserModel = require('./Models/UserModel');
+// const UserModel = require('./Models/UserModel');
 const UserController = require('./Controllers/UserController');
 
 const routes = express.Router();
