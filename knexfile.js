@@ -14,5 +14,28 @@ module.exports = {
     },
     useNullAsDefault: true,
   },
+  staging: {
+    client: 'sqlite3',
+    connection: {
+      filename: './src/database/db.sqlite',
+      password: process.env.PASSWORD,
+    },
+    migrations: {
+      directory: './src/database/migrations',
+    },
+    useNullAsDefault: true,
+  },
+
+  production: {
+    client: 'sqlite3',
+    connection: {
+      filename: './src/database/db.sqlite',
+      password: process.env.PASSWORD,
+    },
+    migrations: {
+      directory: './src/database/migrations',
+    },
+    useNullAsDefault: true,
+  },
 
 };
