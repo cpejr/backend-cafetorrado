@@ -1,6 +1,4 @@
-/* eslint-disable */
 const fs = require('fs');
-const { application } = require('express');
 const roastModel = require('../Models/RoastModel');
 const { update_vin_t } = require('../Structs/send_vin_t');
 const { update_par_t } = require('../Structs/send_par_t');
@@ -14,6 +12,7 @@ coloquei os header e alterei um valor dentro de uma das lookuptables, daí quand
 eu escrevo no arquivo a LUT que eu criei na mão, leio de dentro desse arquivo e jogo dentro da
 maquina o valor lido.
 */
+// eslint-disable-next-line no-buffer-constructor
 const par_t = create_par_t(Buffer(2548));
 par_t.fields.BlkBegPar = 0xeeeeeeee;
 par_t.fields.BlkEndPar = 0xffffffff;

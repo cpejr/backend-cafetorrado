@@ -1,12 +1,8 @@
-/* eslint-disable no-unused-expressions */
-
-const { Struct } = require('struct');
 const { create_vin_t } = require('./vin_t');
 
 const vin_t = create_vin_t();
 
 function update_vin_t(data) {
-  console.log(data);
   const {
     MdlManChr, MdlManInj,
     MdlManCdr, MdlManCar,

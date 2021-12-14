@@ -1,4 +1,3 @@
-/* eslint-disable */
 const express = require('express');
 const RoastController = require('./Controllers/RoastController');
 const MarkController = require('./Controllers/MarkController');

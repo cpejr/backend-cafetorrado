@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 const { Struct } = require('struct');
 
 function wifiBufferToData(buffer) {
@@ -33,7 +34,7 @@ function wifiDataToBuffer({ wifiName, password, hidden }) {
   wifi.allocate();
   const buf = wifi.buffer();
 
-  for (let i = 0; i < buf.length; i++) {
+  for (let i = 0; i < buf.length; i += 1) {
     buf[i] = 0;
   }
   const proxy = wifi.fields;
