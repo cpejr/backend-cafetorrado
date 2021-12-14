@@ -1,10 +1,9 @@
-const { checkWifiConnection } = require('../wifiObserver');
-const { exceptionStatus } = require('../Clients/errorTreatment');
 const io = require('socket.io')(process.env.SOCKET_PORT, {
   cors: {
     origin: '*',
   },
 });
+const { checkWifiConnection } = require('../wifiObserver');
 
 async function treatSocketError() {
   const status = await checkWifiConnection();
