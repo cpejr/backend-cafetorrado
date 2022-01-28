@@ -104,27 +104,13 @@ module.exports = {
 
   async sendStaticParameters(req, res) {
     try {
-      // const { roast_id } = req.params;
-      // Com o encoding descoberto é ajeitar pra logica que já haviamos discutido
-      try {
-        // Crio o arquivo teste com um buffer do tamanho correto com as validações necessárias
-        fs.writeFileSync('src/RoastArchive/testfile', par_t.buffer());
-        // leio desse arquivo que acabei de criar. O encoding é o padrão mesmo, então nem precisa
-        // colocar nada
-        const PARDATA = fs.readFileSync('src/RoastArchive/testfile');
-        // envio pra maquina o arquivo
-        await sendStaticParams(PARDATA);
-        // leio o dado e verifico se está corretp
-        const data = await connectMachineParams();
-        return res.status(200).json({ message: 'Parameters sent to esp, YES', DATA: data.fields.MdlWupChr.Bkp_x[0] });
-        // Averiguar com o Hnerique: QUando a porta 888 é aberta, enviado os dados e fechada,
-        // bloqueia o envio de mais dados. É preciso reiniciar o sistema. Bug?
-      } catch (error) {
-        return res.status(500).json({ error });
-      }
+      const { roast_id } = req.params;
+      const PARDATA = fs.readFileSync(`src/RoastArchive/${roast_id}/DataStructs`);
+      await sendStaticParams(PARDATA);
+      const data = await connectMachineParams();
+      return res.status(200).json({ message: 'Parameters sent to esp, YES', DATA: data.fields.MdlWupChr.Bkp_x[0] });
     } catch (error) {
-      console.log(req.params);
-      return res.status(500).json({ Message: req.params });
+      return res.status(500).json({ error });
     }
   },
 };
