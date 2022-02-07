@@ -104,6 +104,7 @@ module.exports = {
 
   async sendStaticParameters(req, res) {
     try {
+      console.log(' entrei na função ');
       const { roast_id } = req.params;
       const PARDATA = fs.readFileSync(`src/RoastArchive/${roast_id}/DataStructs`);
       await sendStaticParams(PARDATA);
