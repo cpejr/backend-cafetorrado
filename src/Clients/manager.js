@@ -17,8 +17,8 @@ const reconnect = () => {
       if (!standByDataPort) { standByDataPort = new net.Socket(); reconnect(); }
       console.log('Reconectando...');
       setTimeout(() => {
-        standByDataPort.connect(555, '10.10.10.100', () => {
-          console.log('Conectado');
+        standByDataPort.connect(555, '192.168.1.1', () => {
+          console.log('Conectado');//
           io.emit('wifiStatus', true);
           standByDataPort.on('error', (err) => { throw err; });
         });
@@ -57,12 +57,14 @@ async function disconnectParameters(req, res) {
 }
 
 async function connectToDataPort(req, res) {
+  console.log('entrei primeira função');
   if (standByDataPort) { standByDataPort.destroy(); (standByDataPort = null); }
   if (!clientWifi) {
     try {
       clientData = await connectData();
       return res.status(200).json({ Message: 'Connection to data PORT estabilished' });
     } catch (error) {
+      // if (error.Message.code === 'ETIMEDOUT') console.log('Etimedout detected');
       return res.status(500).json({ Message: 'Connection to data PORT failed' });
     }
   } else {

@@ -24,20 +24,23 @@ async function connectData() {
     fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'DataStructs'), '', (err) => { if (err) throw err; })
     fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), '[\n', (err) => { if (err) throw err; })
   })
-
+  
   const client = new net.Socket();
   safeEject.run(() => {
     try {
-      client.connect(888, '192.168.5.1', () => {
+      console.log('Entrei função');
+      client.connect(888, '192.168.1.1', () => {
 
         console.log('Client 1: Data connection established with server');
 
         client.on('close', () => {
+          console.log('entrei client on');
           fs.appendFile(path.join('src/RoastArchive/TEMPORARY', 'ParsedData.json'), '\n]', (err) => { if (err) throw err; })
           separator = '';
           client.destroy();
           console.log('Data connection closed');
         });
+
 
         client.on('data', (data) => {
 
