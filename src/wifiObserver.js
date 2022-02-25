@@ -1,13 +1,13 @@
 const wifi = require('node-wifi');
-const net = require('net');
 const { getWifiName, setWifiName } = require('./Models/wifiModel');
-const { io } = require('./Socket/Assets');
-const { clientData, clientWifi } = require('./Clients/manager');
+const { safeEject } = require('./Clients/errorTreatment');
+// const net = require('net');
+// const { io } = require('./Socket/Assets');
+// const { clientData, clientWifi } = require('./Clients/manager');
 
 wifi.init({ iface: null });
 
 const checker = async (currentName) => new Promise((resolve) => {
-  const { safeEject } = require('./Clients/errorTreatment');
   safeEject.run(
     async () => {
       wifi.getCurrentConnections((error, current) => {
@@ -21,8 +21,6 @@ const checker = async (currentName) => new Promise((resolve) => {
 });
 
 const checkWifiConnection = () => new Promise((resolve) => {
-  const { safeEject } = require('./Clients/errorTreatment');
-
   safeEject.run(
     async () => {
       const currentName = await getWifiName();

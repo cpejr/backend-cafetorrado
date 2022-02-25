@@ -12,7 +12,7 @@ module.exports = {
   },
   async setWifiName(newName) {
     try {
-      const oldName = await getWifiName();
+      const oldName = await this.getWifiName();
       const name = await connection('wifi').where({ name: oldName }).update({ name: newName });
       return name;
     } catch (err) {

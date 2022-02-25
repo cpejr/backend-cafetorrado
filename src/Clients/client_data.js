@@ -29,7 +29,7 @@ async function connectData() {
   safeEject.run(() => {
     try {
       console.log('Entrei função');
-      client.connect(888, '192.168.1.1', () => {
+      client.connect(888, '192.168.5.1', () => {
 
         console.log('Client 1: Data connection established with server');
 
